@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Codecool.CodecoolShop.Daos;
 using Codecool.CodecoolShop.Models;
 
@@ -8,6 +9,7 @@ namespace Codecool.CodecoolShop.Services
     {
         private readonly IProductDao productDao;
         private readonly IProductCategoryDao productCategoryDao;
+        private readonly IProductSupplierDao productSupplierDao;
 
         public ProductService(IProductDao productDao, IProductCategoryDao productCategoryDao)
         {
@@ -24,6 +26,23 @@ namespace Codecool.CodecoolShop.Services
         {
             ProductCategory category = this.productCategoryDao.Get(categoryId);
             return this.productDao.GetBy(category);
+        }
+
+        public IEnumerable<Product> GetProductsForSupplier(int supplierId)
+        {
+            Supplier supplier = this.productSupplierDao.Get(supplierId);
+            return this.productDao.GetBy(supplier);
+        }
+        public IEnumerable<Product> GetProductsForSupplierAndCategory(int supplierId, int categoryId)
+        {
+            var productsForCategory = GetProductsForCategory(categoryId);
+            var productsForSupplier = GetProductsForSupplier(supplierId);
+            return productsForSupplier.Intersect(productsForCategory);
+        }
+
+        public IEnumerable<Product> GetAllProducts()
+        {
+            return this.productDao.GetAll();
         }
     }
 }

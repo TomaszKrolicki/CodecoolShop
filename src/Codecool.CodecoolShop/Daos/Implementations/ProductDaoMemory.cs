@@ -27,7 +27,14 @@ namespace Codecool.CodecoolShop.Daos.Implementations
 
         public void Add(Product item)
         {
-            item.Id = data.Count + 1;
+            if (data.Count == 0)
+            {
+                item.Id = 1;
+            }
+            else
+            {
+                item.Id = data.Max(e => e.Id) + 1;
+            }
             data.Add(item);
         }
 

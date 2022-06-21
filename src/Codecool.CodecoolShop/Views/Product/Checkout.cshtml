@@ -1,46 +1,47 @@
 ﻿@{
     ViewData["Title"] = "Checkout";
 }
-
+@model Codecool.CodecoolShop.Models.UserData
 <div class="container">
-    
-    <form>
+
+    <form asp-action="Checkout" asp-controller="Product">
         <div style="position: relative; left: 10%;">
 
             <div class="col-lg-3 col-lg-3" style="display: inline-block;">
                 <p>PERSONAL DATA</p>
-                <label for="fname">First name:</label><br>
-                <input type="text" id="fname" name="fname"><br>
-                <label for="lname">Last name:</label><br>
-                <input type="text" id="lname" name="lname"><br>
-                <label for="email">Email:</label><br>
-                <input type="email" id="email" name="email"><br>
-                <label for="phone">Phone number:</label><br>
-                <input type="number" id="phone" name="phone"><br><br>
+                <label asp-for="FirstName"></label><br/>
+                <input asp-for="FirstName" placeholder="First Name"/><br/>
+                <label asp-for="LastName"></label><br/>
+                <input asp-for="LastName" placeholder="Last Name"/><br/>
+                <label asp-for="Email"></label><br/>
+                <input asp-for="Email" placeholder="Email"/><br/>
+                <label asp-for="PhoneNumber"></label><br/>
+                <input asp-for="PhoneNumber" placeholder="Phone Number"/><br/>
             </div>
             <div class="col-lg-3 col-lg-3" style="display: inline-block;">
                 <p>BILLING ADDRESS</p>
-                <label for="country">Country:</label><br>
-                <input type="text" id="country" name="country"><br>
-                <label for="city">City:</label><br>
-                <input type="text" id="city" name="city"><br>
-                <label for="zipcode">Zipcode:</label><br>
-                <input id="zipcode" name="zipcode" type="text" pattern="[0-9]*"><br/>
-                <label for="address">Billing Address:</label><br>
-                <input type="text" id="address" name="address"><br><br>
+                <label asp-for="BillingCountry"></label><br/>
+                <input asp-for="BillingCountry" placeholder="Country"/><br/>
+                <label asp-for="BillingCity"></label><br/>
+                <input asp-for="BillingCity" placeholder="City"/><br/>
+                <label asp-for="BillingZip"></label><br/>
+                <input asp-for="BillingZip" placeholder="ZipCode"/><br/>
+                <label asp-for="BillingAddress"></label><br/>
+                <input asp-for="BillingAddress" placeholder="Address"/><br/>
             </div>
             <div class="col-lg-3 col-lg-3" style="display: inline-block;">
                 <p>SHIPPING ADDRESS</p>
-                <label for="countryShipping">Country:</label><br>
-                <input type="text" id="countryShipping" name="countryShipping"><br>
-                <label for="cityShipping">City:</label><br>
-                <input type="text" id="cityShipping" name="cityShipping"><br>
-                <label for="zipcodeShipping">Zipcode:</label><br>
-                <input id="zipcodeShipping" name="zipcodeShipping" type="text" pattern="[0-9]*"><br/>
-                <label for="addressShipping">Shipping Address:</label><br>
-                <input type="text" id="addressShipping" name="addressShipping"><br><br>
+                <label asp-for="ShippingCountry"></label><br/>
+                <input asp-for="ShippingCountry" placeholder="Country"/><br/>
+                <label asp-for="ShippingCity"></label><br/>
+                <input asp-for="ShippingCity" placeholder="City"/><br/>
+                <label asp-for="ShippingZip"></label><br/>
+                <input asp-for="ShippingZip" placeholder="ZipCode"/><br/>
+                <label asp-for="ShippingAddress"></label><br/>
+                <input asp-for="ShippingAddress" placeholder="Address" /><br />
             </div>
-            <input style="position: absolute; left: 35%; bottom: -10%" type="submit" value="PAY"/><br>
+            <br />
+            <input style="position: absolute; left: 30%; bottom: -10%" type="submit" value="Go to Payment"/><br>
         </div>
     </form>
 

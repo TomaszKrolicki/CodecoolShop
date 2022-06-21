@@ -1,0 +1,13 @@
+﻿@model Codecool.CodecoolShop.Models.User
+
+@{
+    ViewData["Title"] = "ShoppingCart";
+}
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    @foreach (var item in Model.ShoppingCart)
+    {
+        <p>@item.Name</p>
+    }
+</div>

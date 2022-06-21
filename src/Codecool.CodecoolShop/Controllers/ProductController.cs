@@ -16,6 +16,7 @@ namespace Codecool.CodecoolShop.Controllers
     {
         private readonly ILogger<ProductController> _logger;
         public ProductService ProductService { get; set; }
+        public UserService UserService { get; set; }
 
         public ProductController(ILogger<ProductController> logger)
         {
@@ -23,7 +24,9 @@ namespace Codecool.CodecoolShop.Controllers
             ProductService = new ProductService(
                 ProductDaoMemory.GetInstance(),
                 ProductCategoryDaoMemory.GetInstance());
+            UserService = new UserService(UserDaoMemory.GetInstance());
         }
+        
 
         public IActionResult Index()
         {
@@ -34,6 +37,11 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+        public IActionResult ShoppingCart()
+        {
+            var user = UserService.GetUser(1);
+            return View(user);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

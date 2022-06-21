@@ -17,6 +17,8 @@ namespace Codecool.CodecoolShop.Controllers
         private readonly ILogger<ProductController> _logger;
         public ProductService ProductService { get; set; }
 
+        private ProductsAndFilters productsAndFilters;
+
         public ProductController(ILogger<ProductController> logger)
         {
             _logger = logger;
@@ -44,8 +46,13 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId)
         {
-            var products = GetFilteredProducts(categoryId, supplierId);
-            return View(products.ToList());
+            productsAndFilters = new ProductsAndFilters
+            {
+                AllProducts = GetFilteredProducts(categoryId, supplierId).ToList(),
+                AllProductCategories = ProductCategoryDaoMemory.GetInstance().GetAll(),
+                AllSuppliers = SupplierDaoMemory.GetInstance().GetAll()
+            };
+            return View(productsAndFilters);
         }
 
         public IActionResult Privacy()

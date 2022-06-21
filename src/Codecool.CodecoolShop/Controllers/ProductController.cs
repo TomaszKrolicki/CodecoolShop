@@ -25,24 +25,26 @@ namespace Codecool.CodecoolShop.Controllers
                 ProductCategoryDaoMemory.GetInstance());
         }
 
-        public IActionResult Index(int categoryId, int supplierId)
+        private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
         {
             if (categoryId == 0 && supplierId == 0)
             {
-                var allProducts = ProductService.GetAllProducts();
-                return View(allProducts.ToList());
+                return ProductService.GetAllProducts();
             }
             else if (categoryId != 0 && supplierId == 0)
             {
-                var productsForCategory = ProductService.GetProductsForCategory(categoryId);
-                return View(productsForCategory.ToList());
+                return ProductService.GetProductsForCategory(categoryId);
             }
             else if (categoryId == 0 && supplierId != 0)
             {
-                var productsForSupplier = ProductService.GetProductsForSupplier(supplierId);
-                return View(productsForSupplier.ToList());
-            }
-            var products = ProductService.GetProductsForSupplierAndCategory(supplierId, categoryId);
+                return ProductService.GetProductsForSupplier(supplierId);
+            } 
+            return ProductService.GetProductsForSupplierAndCategory(supplierId, categoryId);
+        }
+
+        public IActionResult Index(int categoryId, int supplierId)
+        {
+            var products = GetFilteredProducts(categoryId, supplierId);
             return View(products.ToList());
         }
 

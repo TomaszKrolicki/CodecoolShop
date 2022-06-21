@@ -18,20 +18,49 @@ namespace Codecool.CodecoolShop.Controllers
         public ProductService ProductService { get; set; }
         public UserService UserService { get; set; }
 
+        private ProductsAndFilters _productsAndFilters;
+        private int _checkoutNameStep = 1;
+        private int _checkoutBillingAddressStep = 2;
+        private int _checkoutShippingAddressStep = 3;
+
+
         public ProductController(ILogger<ProductController> logger)
         {
             _logger = logger;
             ProductService = new ProductService(
                 ProductDaoMemory.GetInstance(),
-                ProductCategoryDaoMemory.GetInstance());
+                ProductCategoryDaoMemory.GetInstance(),
+                SupplierDaoMemory.GetInstance());
             UserService = new UserService(UserDaoMemory.GetInstance());
         }
-        
 
-        public IActionResult Index()
+        private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
         {
-            var products = ProductService.GetProductsForCategory(1);
-            return View(products.ToList());
+            if (categoryId == 0 && supplierId == 0)
+            {
+                return ProductService.GetAllProducts();
+            }
+            else if (categoryId != 0 && supplierId == 0)
+            {
+                return ProductService.GetProductsForCategory(categoryId);
+            }
+            else if (categoryId == 0 && supplierId != 0)
+            {
+                return ProductService.GetProductsForSupplier(supplierId);
+            } 
+            return ProductService.GetProductsForSupplierAndCategory(supplierId, categoryId);
+                
+        }
+
+        public IActionResult Index(int categoryId, int supplierId)
+        {
+            _productsAndFilters = new ProductsAndFilters
+            {
+                AllProducts = GetFilteredProducts(categoryId, supplierId).ToList(),
+                AllProductCategories = ProductCategoryDaoMemory.GetInstance().GetAll(),
+                AllSuppliers = SupplierDaoMemory.GetInstance().GetAll()
+            };
+            return View(_productsAndFilters);
         }
 
         public IActionResult Privacy()
@@ -48,6 +77,11 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Checkout()
+        {
+            return View();
         }
     }
 }

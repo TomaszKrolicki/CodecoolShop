@@ -17,14 +17,15 @@ namespace Codecool.CodecoolShop.Controllers
         private readonly ILogger<ProductController> _logger;
         public ProductService ProductService { get; set; }
 
-        private ProductsAndFilters productsAndFilters;
+        private ProductsAndFilters _productsAndFilters;
 
         public ProductController(ILogger<ProductController> logger)
         {
             _logger = logger;
             ProductService = new ProductService(
                 ProductDaoMemory.GetInstance(),
-                ProductCategoryDaoMemory.GetInstance());
+                ProductCategoryDaoMemory.GetInstance(),
+                SupplierDaoMemory.GetInstance());
         }
 
         private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
@@ -46,13 +47,13 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId)
         {
-            productsAndFilters = new ProductsAndFilters
+            _productsAndFilters = new ProductsAndFilters
             {
                 AllProducts = GetFilteredProducts(categoryId, supplierId).ToList(),
                 AllProductCategories = ProductCategoryDaoMemory.GetInstance().GetAll(),
                 AllSuppliers = SupplierDaoMemory.GetInstance().GetAll()
             };
-            return View(productsAndFilters);
+            return View(_productsAndFilters);
         }
 
         public IActionResult Privacy()

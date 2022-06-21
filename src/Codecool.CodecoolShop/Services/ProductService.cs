@@ -9,12 +9,13 @@ namespace Codecool.CodecoolShop.Services
     {
         private readonly IProductDao productDao;
         private readonly IProductCategoryDao productCategoryDao;
-        private readonly IProductSupplierDao productSupplierDao;
+        private readonly ISupplierDao productSupplierDao;
 
-        public ProductService(IProductDao productDao, IProductCategoryDao productCategoryDao)
+        public ProductService(IProductDao productDao, IProductCategoryDao productCategoryDao, ISupplierDao productSupplierDao)
         {
             this.productDao = productDao;
             this.productCategoryDao = productCategoryDao;
+            this.productSupplierDao = productSupplierDao;
         }
 
         public ProductCategory GetProductCategory(int categoryId)

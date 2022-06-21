@@ -20,8 +20,16 @@
                         <p class="card-text">@element.Description.</p>
                         <p class="card-text">Category: @element.ProductCategory.Department</p>
                         <p class="card-text">Supplier: @element.Supplier.Name</p>
+                        <p class="card-text">In stock: @element.Quantity pcs.</p>
                         <p class="card-text text-center"><strong>Price: @element.DefaultPrice.ToString("C2")</strong></p>
-                        <a href="" type="button" class="btn btn-primary" style="float: bottom">Add To Cart</a>
+                        @if (element.Quantity > 0)
+                        {
+                            <a href="" type="button" class="btn btn-primary" style="float: bottom">Add To Cart</a>
+                        }
+                        else
+                        {
+                            <a href="" type="button" class="btn btn-primary" style="float: bottom">Out of stock</a>
+                        }
                     </div>
                 </div>
             </div>

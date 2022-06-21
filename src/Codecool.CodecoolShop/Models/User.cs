@@ -9,11 +9,12 @@ namespace Codecool.CodecoolShop.Models
             Name = name;
             UserId = userId;
             ShoppingCart = shoppingCart;
-
+            ShoppingCartValue = 0;
         }
         public string Name { get; set; }
         public int UserId { get; set; }
         public List<Product> ShoppingCart { get; set; }
+        public decimal ShoppingCartValue { get; set; }
 
     }
 }

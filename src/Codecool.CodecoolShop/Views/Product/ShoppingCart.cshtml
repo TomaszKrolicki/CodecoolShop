@@ -2,12 +2,24 @@
 
 @{
     ViewData["Title"] = "ShoppingCart";
+    decimal cartValue = 0 ;
+    
 }
 <h1>@ViewData["Title"]</h1>
 
-<div>
+
     @foreach (var item in Model.ShoppingCart)
     {
-        <p>@item.Name</p>
+        cartValue += item.DefaultPrice;
+        <div>
+            <div class="img-container">
+                <img src="../img/@(item.Name).jpg"/>
+            </div>
+            @item.ProductCategory
+            @item.Name
+            @item.Description
+        </div>
     }
-</div>
+
+<p>Total cart value @cartValue$</p>
+

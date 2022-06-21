@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container">
+    
+    <form>
+        <div style="position: relative; left: 10%;">
+
+            <div class="col-lg-3 col-lg-3" style="display: inline-block;">
+                <p>PERSONAL DATA</p>
+                <label for="fname">First name:</label><br>
+                <input type="text" id="fname" name="fname"><br>
+                <label for="lname">Last name:</label><br>
+                <input type="text" id="lname" name="lname"><br>
+                <label for="email">Email:</label><br>
+                <input type="email" id="email" name="email"><br>
+                <label for="phone">Phone number:</label><br>
+                <input type="number" id="phone" name="phone"><br><br>
+            </div>
+            <div class="col-lg-3 col-lg-3" style="display: inline-block;">
+                <p>BILLING ADDRESS</p>
+                <label for="country">Country:</label><br>
+                <input type="text" id="country" name="country"><br>
+                <label for="city">City:</label><br>
+                <input type="text" id="city" name="city"><br>
+                <label for="zipcode">Zipcode:</label><br>
+                <input id="zipcode" name="zipcode" type="text" pattern="[0-9]*"><br/>
+                <label for="address">Billing Address:</label><br>
+                <input type="text" id="address" name="address"><br><br>
+            </div>
+            <div class="col-lg-3 col-lg-3" style="display: inline-block;">
+                <p>SHIPPING ADDRESS</p>
+                <label for="countryShipping">Country:</label><br>
+                <input type="text" id="countryShipping" name="countryShipping"><br>
+                <label for="cityShipping">City:</label><br>
+                <input type="text" id="cityShipping" name="cityShipping"><br>
+                <label for="zipcodeShipping">Zipcode:</label><br>
+                <input id="zipcodeShipping" name="zipcodeShipping" type="text" pattern="[0-9]*"><br/>
+                <label for="addressShipping">Shipping Address:</label><br>
+                <input type="text" id="addressShipping" name="addressShipping"><br><br>
+            </div>
+            <input style="position: absolute; left: 35%; bottom: -10%" type="submit" value="PAY"/><br>
+        </div>
+    </form>
+
+
+</div>

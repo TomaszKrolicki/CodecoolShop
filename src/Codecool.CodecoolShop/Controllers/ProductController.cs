@@ -18,9 +18,6 @@ namespace Codecool.CodecoolShop.Controllers
         public ProductService ProductService { get; set; }
 
         private ProductsAndFilters _productsAndFilters;
-        private int _checkoutNameStep = 1;
-        private int _checkoutBillingAddressStep = 2;
-        private int _checkoutShippingAddressStep = 3;
 
 
         public ProductController(ILogger<ProductController> logger)
@@ -71,9 +68,16 @@ namespace Codecool.CodecoolShop.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [HttpGet]
         public IActionResult Checkout()
         {
             return View();
+        }
+        
+        [HttpPost, ValidateAntiForgeryToken]
+        public IActionResult Checkout(UserData user)
+        {
+            return Content($"Hello {user.FirstName} {user.LastName}");
         }
     }
 }

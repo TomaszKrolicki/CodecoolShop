@@ -18,12 +18,15 @@ namespace Codecool.CodecoolShop.Services
             this.productSupplierDao = productSupplierDao;
         }
 
+
         public ProductCategory GetProductCategory(int categoryId)
         {
             return this.productCategoryDao.Get(categoryId);
         }
 
-        public IEnumerable<Product> GetProductsForCategory(int categoryId)
+    
+
+    public IEnumerable<Product> GetProductsForCategory(int categoryId)
         {
             ProductCategory category = this.productCategoryDao.Get(categoryId);
             return this.productDao.GetBy(category);

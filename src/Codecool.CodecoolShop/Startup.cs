@@ -64,6 +64,7 @@ namespace Codecool.CodecoolShop
             IProductDao productDataStore = ProductDaoMemory.GetInstance();
             IProductCategoryDao productCategoryDataStore = ProductCategoryDaoMemory.GetInstance();
             ISupplierDao supplierDataStore = SupplierDaoMemory.GetInstance();
+            IUserDao userDataStore = UserDaoMemory.GetInstance();
 
             Supplier amazon = new Supplier{Name = "Amazon", Description = "Digital content and services"};
             supplierDataStore.Add(amazon);
@@ -80,6 +81,7 @@ namespace Codecool.CodecoolShop
             productDataStore.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", Quantity = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
             User Janusz = new User ( "Janusz", 1, new List<Product>() );
             Janusz.ShoppingCart.Add(new Product { Name = "Amazon Fire", DefaultPrice = 49.9m, Quantity = 1, Currency = "USD", Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = tablet, Supplier = amazon });
+            userDataStore.Add(Janusz);
             Console.WriteLine(1);
 
         }

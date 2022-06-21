@@ -16,6 +16,7 @@ namespace Codecool.CodecoolShop.Controllers
     {
         private readonly ILogger<ProductController> _logger;
         public ProductService ProductService { get; set; }
+        public UserService UserService { get; set; }
 
         private ProductsAndFilters _productsAndFilters;
 
@@ -27,6 +28,7 @@ namespace Codecool.CodecoolShop.Controllers
                 ProductDaoMemory.GetInstance(),
                 ProductCategoryDaoMemory.GetInstance(),
                 SupplierDaoMemory.GetInstance());
+            UserService = new UserService(UserDaoMemory.GetInstance());
         }
 
         private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
@@ -44,6 +46,7 @@ namespace Codecool.CodecoolShop.Controllers
                 return ProductService.GetProductsForSupplier(supplierId);
             } 
             return ProductService.GetProductsForSupplierAndCategory(supplierId, categoryId);
+                
         }
 
         public IActionResult Index(int categoryId, int supplierId)
@@ -60,6 +63,11 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+        public IActionResult ShoppingCart()
+        {
+            var user = UserService.GetUser(1);
+            return View(user);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

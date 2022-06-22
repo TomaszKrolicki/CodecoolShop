@@ -62,6 +62,7 @@ namespace Codecool.CodecoolShop
         private void SetupInMemoryDatabases()
         {
             IProductDao productDataStore = ProductDaoMemory.GetInstance();
+            IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
             IProductCategoryDao productCategoryDataStore = ProductCategoryDaoMemory.GetInstance();
             ISupplierDao supplierDataStore = SupplierDaoMemory.GetInstance();
             IUserDao userDataStore = UserDaoMemory.GetInstance();

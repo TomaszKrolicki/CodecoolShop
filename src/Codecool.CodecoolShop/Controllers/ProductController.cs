@@ -52,14 +52,9 @@ namespace Codecool.CodecoolShop.Controllers
                 
         }
 
-        public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1, bool ordered = false)
+        public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
             var user = UserService.GetUser(1);
-            if (ordered)
-            {
-                user.ShoppingCart = new List<Product>();
-                user.ShoppingCartValue = 0;
-            }
             if (orderedProductId != -1)
             {
                 var allProducts = GetFilteredProducts(0, 0);
@@ -100,9 +95,25 @@ namespace Codecool.CodecoolShop.Controllers
             foreach (Product product in newestOrder.User.ShoppingCart)
             {
                 allProducts.First(e => e.Id == product.Id).Quantity -= product.Quantity;
+                allProducts.First(e => e.Id == product.Id).MaxInStock -= product.Quantity;
             }
-            var user = UserService.GetUser(1);
-            return View(newestOrder);
+
+            var userData = newestOrder.User;
+            var userAddress = newestOrder.UserPersonalInformation;
+            OrderForDelete orderCopy = new OrderForDelete()
+            {
+                Name = userData.Name, UserId = userData.UserId,
+                ShoppingCart = userData.ShoppingCart, ShoppingCartValue = userData.ShoppingCartValue,
+                FirstName = userAddress.FirstName, LastName = userAddress.LastName, Email = userAddress.Email,
+                PhoneNumber = userAddress.PhoneNumber, BillingAddress = userAddress.BillingAddress, BillingCity = userAddress.BillingCity,
+                BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
+                ShippingAddress = userAddress.ShippingAddress, ShippingCity = userAddress.ShippingCity,
+                ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.OrderId,
+                OrderDateTime = newestOrder.OrderDateTime
+            };
+            newestOrder.User.ShoppingCart = new List<Product>();
+            newestOrder.User.ShoppingCartValue = 0;
+            return View(orderCopy);
         }
 
         public IActionResult Privacy()

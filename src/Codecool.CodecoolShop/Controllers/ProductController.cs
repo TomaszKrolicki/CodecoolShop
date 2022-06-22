@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Codecool.CodecoolShop.Daos;
 using Codecool.CodecoolShop.Daos.Implementations;
@@ -49,8 +50,18 @@ namespace Codecool.CodecoolShop.Controllers
                 
         }
 
-        public IActionResult Index(int categoryId, int supplierId)
+        public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
+            if (orderedProductId != -1)
+            {
+                var user = UserService.GetUser(1);
+                
+                var allProducts = GetFilteredProducts(0, 0);
+                var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
+                user.ShoppingCart.Add(orderedProduct);
+
+
+            }
             _productsAndFilters = new ProductsAndFilters
             {
                 AllProducts = GetFilteredProducts(categoryId, supplierId).ToList(),
@@ -87,5 +98,7 @@ namespace Codecool.CodecoolShop.Controllers
         {
             return Content($"Hello {user.FirstName} {user.LastName}");
         }
+
+
     }
 }

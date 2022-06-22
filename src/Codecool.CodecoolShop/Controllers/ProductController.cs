@@ -58,6 +58,7 @@ namespace Codecool.CodecoolShop.Controllers
                 
                 var allProducts = GetFilteredProducts(0, 0);
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
+
                 user.ShoppingCart.Add(orderedProduct);
 
 

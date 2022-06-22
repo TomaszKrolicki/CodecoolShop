@@ -25,7 +25,7 @@
 
     </div>
 }
-<p id="checkoutvalue">Total order value @Model.User.ShoppingCartValue$</p>
+<p id="checkoutvalue">Total order value <b>@Model.User.ShoppingCartValue$</b></p>
 
 <div class="col-lg-3 col-lg-3" style="display: inline-block;">
     <p>PERSONAL DATA</p>
@@ -49,4 +49,4 @@
     <p>Address: @Model.UserPersonalInformation.ShippingAddress</p>
 </div>
 
-<a asp-controller="Product" asp-action="Index">Go to main page</a>
+<a asp-controller="Product" asp-action="Index" asp-route-ordered="true">Go to main page</a>

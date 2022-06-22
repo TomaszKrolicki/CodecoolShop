@@ -52,12 +52,16 @@ namespace Codecool.CodecoolShop.Controllers
                 
         }
 
-        public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
+        public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1, bool ordered = false)
         {
+            var user = UserService.GetUser(1);
+            if (ordered)
+            {
+                user.ShoppingCart = new List<Product>();
+                user.ShoppingCartValue = 0;
+            }
             if (orderedProductId != -1)
             {
-                var user = UserService.GetUser(1);
-                
                 var allProducts = GetFilteredProducts(0, 0);
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
                 if (user.ShoppingCart.Any(p=>p.Id == orderedProductId))
@@ -97,6 +101,7 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 allProducts.First(e => e.Id == product.Id).Quantity -= product.Quantity;
             }
+            var user = UserService.GetUser(1);
             return View(newestOrder);
         }
 

@@ -121,7 +121,6 @@ namespace Codecool.CodecoolShop.Controllers
                 Order newOrder = new Order(currentUser, userData);
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
-                //var x = OrderService.GetNewestOrder();
                 return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);

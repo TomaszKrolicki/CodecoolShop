@@ -98,7 +98,7 @@ namespace Codecool.CodecoolShop.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Checkout([Bind("FirstName,LastName,Email,PhoneNumber," +
                                                         "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
-                                                        "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress")] UserDataToCheck userData)
+                                                        "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
             if (ModelState.IsValid)
             {
@@ -110,18 +110,10 @@ namespace Codecool.CodecoolShop.Controllers
                 ordersDataStore.Add(newOrder);
                 //var x = OrderService.GetNewestOrder();
                 return Content($"Hello {newOrder.OrderId} {newOrder.UserPersonalInformation.ShippingAddress} " +
-                               $"{newOrder.User.ShoppingCart.Count}");
+                               $"{newOrder.User.ShoppingCart.Count} {newOrder.UserPersonalInformation.IsPayedNow}");
                 return RedirectToAction(nameof(Index));
             }
             return View(userData);
         }
-        //public IActionResult Checkout(UserDataToCheck user)
-        //{
-            
-        //    return View();
-        //    return Content($"Hello {user.FirstName} {user.LastName}");
-        //}
-
-
     }
 }

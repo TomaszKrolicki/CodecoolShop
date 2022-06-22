@@ -77,5 +77,7 @@ namespace Codecool.CodecoolShop.Models
         [Required]
         [StringLength(60)]
         public string ShippingAddress { get; set; }
+        [DisplayName("Do you want to pay now?")]
+        public bool IsPayedNow { get; set; }
     }
 }

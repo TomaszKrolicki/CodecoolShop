@@ -5,6 +5,7 @@
     decimal cartValue = 0 ;
     
 }
+<<script src="../js/CheckoutCounter.js" defer></script>
 <h1>@ViewData["Title"]</h1>
 
 
@@ -20,7 +21,8 @@
             </div>
             <div class="product-description-container">
                 <div class="product-quantity-container">
-                    <input type="number" min="1" max="@item.Quantity" value="1"/>
+                    <input type="number" min="0" max="@item.Quantity" value="1" onclick="onClickEventInput()"/>
+                    <p>@item.DefaultPrice$</p>
                 </div>
                 <p>@item.Description</p>
             </div>
@@ -29,5 +31,5 @@
         </div>
     }
 
-<p>Total cart value @cartValue$</p>
+<p id="checkoutvalue">Total cart value @cartValue$</p>
 <a asp-controller="Product" asp-action="Checkout">Checkout</a>

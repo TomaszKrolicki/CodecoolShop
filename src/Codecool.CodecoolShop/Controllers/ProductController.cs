@@ -60,9 +60,18 @@ namespace Codecool.CodecoolShop.Controllers
                 
                 var allProducts = GetFilteredProducts(0, 0);
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
-                user.ShoppingCart.Add(orderedProduct);
-
-
+                if (user.ShoppingCart.Any(p=>p.Id == orderedProductId))
+                {
+                    user.ShoppingCart.First(e => e.Id == orderedProductId).Quantity++;
+                }
+                else
+                {
+                    user.ShoppingCart.Add(new Product { Id = orderedProduct.Id, Name = orderedProduct.Name, DefaultPrice = orderedProduct.DefaultPrice,
+                        Currency = orderedProduct.Currency, Quantity = 1, MaxInStock = orderedProduct.MaxInStock, 
+                        Description = orderedProduct.Description, ProductCategory = orderedProduct.ProductCategory, 
+                        Supplier = orderedProduct.Supplier });
+                }
+                
             }
             _productsAndFilters = new ProductsAndFilters
             {
@@ -71,6 +80,12 @@ namespace Codecool.CodecoolShop.Controllers
                 AllSuppliers = SupplierDaoMemory.GetInstance().GetAll()
             };
             return View(_productsAndFilters);
+        }
+
+        public IActionResult OrderDetails()
+        {
+            var newestOrder = OrderService.GetNewestOrder();
+            return View(newestOrder);
         }
 
         public IActionResult Privacy()
@@ -104,14 +119,10 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 User currentUser = UserService.GetUser(1);
                 Order newOrder = new Order(currentUser, userData);
-                
-                var orders = OrderService.GetAllOrders();
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
                 //var x = OrderService.GetNewestOrder();
-                return Content($"Hello {newOrder.OrderId} {newOrder.UserPersonalInformation.ShippingAddress} " +
-                               $"{newOrder.User.ShoppingCart.Count} {newOrder.UserPersonalInformation.IsPayedNow}");
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);
         }

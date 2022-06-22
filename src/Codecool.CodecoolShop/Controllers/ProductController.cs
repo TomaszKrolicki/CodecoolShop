@@ -18,6 +18,7 @@ namespace Codecool.CodecoolShop.Controllers
         private readonly ILogger<ProductController> _logger;
         public ProductService ProductService { get; set; }
         public UserService UserService { get; set; }
+        public OrderService OrderService { get; set; }
 
         private ProductsAndFilters _productsAndFilters;
 
@@ -30,6 +31,7 @@ namespace Codecool.CodecoolShop.Controllers
                 ProductCategoryDaoMemory.GetInstance(),
                 SupplierDaoMemory.GetInstance());
             UserService = new UserService(UserDaoMemory.GetInstance());
+            OrderService = new OrderService(OrderDaoMemory.GetInstance());
         }
 
         private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
@@ -100,6 +102,15 @@ namespace Codecool.CodecoolShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                User currentUser = UserService.GetUser(1);
+                Order newOrder = new Order(currentUser, userData);
+                
+                var orders = OrderService.GetAllOrders();
+                IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
+                ordersDataStore.Add(newOrder);
+                //var x = OrderService.GetNewestOrder();
+                return Content($"Hello {newOrder.OrderId} {newOrder.UserPersonalInformation.ShippingAddress} " +
+                               $"{newOrder.User.ShoppingCart.Count}");
                 return RedirectToAction(nameof(Index));
             }
             return View(userData);

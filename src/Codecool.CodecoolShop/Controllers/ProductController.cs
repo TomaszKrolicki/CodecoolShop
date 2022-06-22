@@ -62,7 +62,12 @@ namespace Codecool.CodecoolShop.Controllers
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
                 if (user.ShoppingCart.Any(p=>p.Id == orderedProductId))
                 {
-                    user.ShoppingCart.First(e => e.Id == orderedProductId).Quantity++;
+                    var product = user.ShoppingCart.First(e => e.Id == orderedProductId);
+                    product.Quantity++;
+                    if (product.Quantity > product.MaxInStock)
+                    {
+                        product.Quantity = product.MaxInStock;
+                    }
                 }
                 else
                 {
@@ -71,7 +76,9 @@ namespace Codecool.CodecoolShop.Controllers
                         Description = orderedProduct.Description, ProductCategory = orderedProduct.ProductCategory, 
                         Supplier = orderedProduct.Supplier });
                 }
-                
+
+                user.ShoppingCartValue += orderedProduct.DefaultPrice;
+
             }
             _productsAndFilters = new ProductsAndFilters
             {
@@ -85,6 +92,11 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult OrderDetails()
         {
             var newestOrder = OrderService.GetNewestOrder();
+            var allProducts = GetFilteredProducts(0, 0);
+            foreach (Product product in newestOrder.User.ShoppingCart)
+            {
+                allProducts.First(e => e.Id == product.Id).Quantity -= product.Quantity;
+            }
             return View(newestOrder);
         }
 

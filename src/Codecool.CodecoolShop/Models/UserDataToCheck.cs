@@ -2,7 +2,7 @@
 
 namespace Codecool.CodecoolShop.Models
 {
-    public class UserData
+    public class UserDataToCheck
     {
         [DisplayName("First Name")]
         public string FirstName { get; set; }

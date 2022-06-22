@@ -83,7 +83,7 @@ namespace Codecool.CodecoolShop.Controllers
         }
         
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Checkout(UserData user)
+        public IActionResult Checkout(UserDataToCheck user)
         {
             return Content($"Hello {user.FirstName} {user.LastName}");
         }

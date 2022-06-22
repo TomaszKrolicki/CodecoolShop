@@ -9,36 +9,74 @@
 
             <div class="col-lg-3 col-lg-3" style="display: inline-block;">
                 <p>PERSONAL DATA</p>
-                <label asp-for="FirstName"></label><br/>
-                <input asp-for="FirstName" placeholder="First Name"/><br/>
-                <label asp-for="LastName"></label><br/>
-                <input asp-for="LastName" placeholder="Last Name"/><br/>
-                <label asp-for="Email"></label><br/>
-                <input asp-for="Email" placeholder="Email"/><br/>
-                <label asp-for="PhoneNumber"></label><br/>
-                <input asp-for="PhoneNumber" placeholder="Phone Number"/><br/>
+                <div>
+                    <label asp-for="FirstName"></label><br/>
+                    <input asp-for="FirstName" placeholder="First Name"/><br/>
+                    <span asp-validation-for="FirstName" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="LastName"></label><br/>
+                    <input asp-for="LastName" placeholder="Last Name"/><br/>
+                    <span asp-validation-for="LastName" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="Email"></label><br/>
+                    <input asp-for="Email" placeholder="Email"/><br/>
+                    <span asp-validation-for="Email" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="PhoneNumber"></label><br/>
+                    <input asp-for="PhoneNumber" placeholder="Phone Number"/><br/>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span><br/>
+                </div>
             </div>
+
             <div class="col-lg-3 col-lg-3" style="display: inline-block;">
                 <p>BILLING ADDRESS</p>
-                <label asp-for="BillingCountry"></label><br/>
-                <input asp-for="BillingCountry" placeholder="Country"/><br/>
-                <label asp-for="BillingCity"></label><br/>
-                <input asp-for="BillingCity" placeholder="City"/><br/>
-                <label asp-for="BillingZip"></label><br/>
-                <input asp-for="BillingZip" placeholder="ZipCode"/><br/>
-                <label asp-for="BillingAddress"></label><br/>
-                <input asp-for="BillingAddress" placeholder="Address"/><br/>
+                <div>
+                    <label asp-for="BillingCountry"></label><br/>
+                    <input asp-for="BillingCountry" placeholder="Country"/><br/>
+                    <span asp-validation-for="BillingCountry" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="BillingCity"></label><br/>
+                    <input asp-for="BillingCity" placeholder="City"/><br/>
+                    <span asp-validation-for="BillingCity" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="BillingZip"></label><br/>
+                    <input asp-for="BillingZip" placeholder="ZipCode"/><br/>
+                    <span asp-validation-for="BillingZip" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="BillingAddress"></label><br/>
+                    <input asp-for="BillingAddress" placeholder="Address"/><br/>
+                    <span asp-validation-for="BillingAddress" class="text-danger"></span><br/>
+                </div>
+
             </div>
             <div class="col-lg-3 col-lg-3" style="display: inline-block;">
                 <p>SHIPPING ADDRESS</p>
-                <label asp-for="ShippingCountry"></label><br/>
-                <input asp-for="ShippingCountry" placeholder="Country"/><br/>
-                <label asp-for="ShippingCity"></label><br/>
-                <input asp-for="ShippingCity" placeholder="City"/><br/>
-                <label asp-for="ShippingZip"></label><br/>
-                <input asp-for="ShippingZip" placeholder="ZipCode"/><br/>
-                <label asp-for="ShippingAddress"></label><br/>
-                <input asp-for="ShippingAddress" placeholder="Address" /><br />
+                <div>
+                    <label asp-for="ShippingCountry"></label><br/>
+                    <input asp-for="ShippingCountry" placeholder="Country"/><br/>
+                    <span asp-validation-for="ShippingCountry" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="ShippingCity"></label><br/>
+                    <input asp-for="ShippingCity" placeholder="City"/><br/>
+                    <span asp-validation-for="ShippingCity" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="ShippingZip"></label><br/>
+                    <input asp-for="ShippingZip" placeholder="ZipCode"/><br/>
+                    <span asp-validation-for="ShippingZip" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="ShippingAddress"></label><br/>
+                    <input asp-for="ShippingAddress" placeholder="Address"/><br/>
+                    <span asp-validation-for="ShippingAddress" class="text-danger"></span><br/>
+                </div>
             </div>
             <br />
             <input style="position: absolute; left: 30%; bottom: -10%" type="submit" value="Go to Payment"/><br>

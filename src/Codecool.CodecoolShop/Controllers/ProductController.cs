@@ -94,10 +94,22 @@ namespace Codecool.CodecoolShop.Controllers
         }
         
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Checkout(UserDataToCheck user)
+        public async Task<IActionResult> Checkout([Bind("FirstName,LastName,Email,PhoneNumber," +
+                                                        "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
+                                                        "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress")] UserDataToCheck userData)
         {
-            return Content($"Hello {user.FirstName} {user.LastName}");
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(userData);
         }
+        //public IActionResult Checkout(UserDataToCheck user)
+        //{
+            
+        //    return View();
+        //    return Content($"Hello {user.FirstName} {user.LastName}");
+        //}
 
 
     }

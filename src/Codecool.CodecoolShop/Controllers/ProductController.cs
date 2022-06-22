@@ -138,6 +138,10 @@ namespace Codecool.CodecoolShop.Controllers
                 Order newOrder = new Order(currentUser, userData);
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
+                if (newOrder.UserPersonalInformation.IsPayedNow)
+                {
+                    //return RedirectToAction(nameof(Payment));
+                }
                 return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);

@@ -1,10 +1,11 @@
 ﻿@{
     ViewData["Title"] = "Order Details";
 }
-@model Codecool.CodecoolShop.Models.Order
+@model Codecool.CodecoolShop.Models.OrderForDelete
 
-<h2>Order number @Model.OrderId</h2>
-@foreach (var item in Model.User.ShoppingCart)
+<h2>Thank You for Your order! </h2>
+<h3>Order number @Model.OrderId</h3>
+@foreach (var item in Model.ShoppingCart)
 {
     <div class="shopping-cart-holder">
         <div class="img-container">
@@ -24,3 +25,29 @@
 
     </div>
 }
+<p id="checkoutvalue">Total order value <b>@Model.ShoppingCartValue$</b></p>
+<p id="checkoutvalue">Order date: <b>@Model.OrderDateTime</b></p>
+
+<div class="col-lg-3 col-lg-3" style="display: inline-block;">
+    <p>PERSONAL DATA</p>
+    <p>First Name: @Model.FirstName </p>
+    <p>Last Name: @Model.LastName</p>
+    <p>Email: @Model.Email</p>
+    <p>Phone number: @Model.PhoneNumber</p>
+</div>
+<div class="col-lg-3 col-lg-3" style="display: inline-block;">
+    <p>BILLING ADDRESS</p>
+    <p>Country: @Model.BillingCountry </p>
+    <p>City: @Model.BillingCity</p>
+    <p>ZipCode: @Model.BillingZip</p>
+    <p>Address: @Model.BillingAddress</p>
+</div>
+<div class="col-lg-3 col-lg-3" style="display: inline-block;">
+    <p>SHIPPING ADDRESS</p>
+    <p>Country: @Model.ShippingCountry </p>
+    <p>City: @Model.ShippingCity</p>
+    <p>ZipCode: @Model.ShippingZip</p>
+    <p>Address: @Model.ShippingAddress</p>
+</div>
+
+<a asp-controller="Product" asp-action="Index">Go to main page</a>

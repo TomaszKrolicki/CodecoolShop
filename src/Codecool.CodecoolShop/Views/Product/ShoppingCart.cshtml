@@ -32,4 +32,12 @@
     }
 
 <p id="checkoutvalue">Total cart value @cartValue$</p>
-<a asp-controller="Product" asp-action="Checkout">Checkout</a>
+@if (Model.ShoppingCart.Count > 0)
+{
+    <a asp-controller="Product" asp-action="Checkout">Checkout</a>
+}
+else
+{
+    <p>Your shopping cart is empty!</p>
+}
+

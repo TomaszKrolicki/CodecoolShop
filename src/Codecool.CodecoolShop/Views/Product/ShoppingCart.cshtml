@@ -22,6 +22,8 @@
             <div class="product-description-container">
                 <div class="product-quantity-container">
                     <input type="number" min="1" max="@item.MaxInStock" value="@item.Quantity" onclick="onClickEventInput()"/>
+                    <form><button type="submit" asp-controller="Product" asp-action="PlusQuantity" asp-route-id="@item.Id">+</button></form>
+                    <form><button type="submit" asp-controller="Product" asp-action="MinusQuantity" asp-route-id="@item.Id">- </button></form>
                     <p>@item.DefaultPrice$</p>
                 </div>
                 <p>@item.Description</p>
@@ -34,7 +36,7 @@
 <p id="checkoutvalue">Total cart value @cartValue$</p>
 @if (Model.ShoppingCart.Count > 0)
 {
-    <a asp-controller="Product" asp-action="Checkout">Checkout</a>
+    <a asp-controller="Product" asp-action="Checkout" >Checkout</a>
 }
 else
 {

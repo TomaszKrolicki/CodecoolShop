@@ -126,10 +126,46 @@ namespace Codecool.CodecoolShop.Controllers
         {
             return View();
         }
+        [HttpGet]
         public IActionResult ShoppingCart()
         {
             var user = UserService.GetUser(1);
             return View(user);
+        }
+
+        //public IActionResult ShoppingCartCheckout(User user)
+        //{
+        //    return RedirectToAction(nameof(Checkout));
+        //}
+
+        public IActionResult PlusQuantity(int id)
+        {
+            var user = UserService.GetUser(1);
+            var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
+            if (product.Quantity == product.MaxInStock)
+            {
+                product.Quantity = product.MaxInStock;
+            }
+            else
+            {
+                product.Quantity++;
+                user.ShoppingCartValue += product.DefaultPrice;
+            }
+                
+            return RedirectToAction(nameof(ShoppingCart));
+        }
+
+        public IActionResult MinusQuantity(int id)
+        {
+            var user = UserService.GetUser(1);
+            var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
+            product.Quantity--;
+            user.ShoppingCartValue -= product.DefaultPrice;
+            if (product.Quantity == 0)
+            {
+                user.ShoppingCart.Remove(product);
+            }
+            return RedirectToAction(nameof(ShoppingCart));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -153,6 +189,8 @@ namespace Codecool.CodecoolShop.Controllers
             Order newOrder = new Order(currentUser, userData);
             var userDat = newOrder.User;
             var userAddress = newOrder.UserPersonalInformation;
+            IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
+            ordersDataStore.Add(newOrder);
             OrderForDelete orderCopy = new OrderForDelete()
             {
                 Name = userDat.Name,
@@ -180,8 +218,7 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 newOrder.IsSuccessFull = true;
                 orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
-                IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
-                ordersDataStore.Add(newOrder);
+                
                 string jsonOrderSuccessFull = orderCopy.SaveToJson();
                 string filename = $"{orderCopy.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
                 System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);

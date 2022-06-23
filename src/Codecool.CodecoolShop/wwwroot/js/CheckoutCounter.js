@@ -1,7 +1,7 @@
 ﻿var sum = document.getElementById("checkoutvalue").innerHTML;
 var floatCartValue;
 activeOnClickEvent();
-onClickEventInput()
+onClickEventInput();
 
 function activeOnClickEvent() {
     var cartValue = "";
@@ -22,7 +22,8 @@ function onClickEventInput() {
     var countQuantity;
     var cards = document.getElementsByClassName("product-quantity-container"); // product-description-container input-Quantity
     for (let i = 0; i < cards.length; i++) {
-        floatValue = transofrmToFloat(cards[i].childNodes[3].innerHTML);
+        console.dir(cards[i].childNodes);
+        floatValue = transofrmToFloat(cards[i].childNodes[7].innerHTML);
         countQuantity = parseFloat(cards[i].childNodes[1].value);
         newSum += (floatValue * countQuantity);
     }

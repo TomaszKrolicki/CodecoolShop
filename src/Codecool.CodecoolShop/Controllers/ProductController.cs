@@ -149,6 +149,8 @@ namespace Codecool.CodecoolShop.Controllers
             Order newOrder = new Order(currentUser, userData);
             var userDat = newOrder.User;
             var userAddress = newOrder.UserPersonalInformation;
+            IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
+            ordersDataStore.Add(newOrder);
             OrderForDelete orderCopy = new OrderForDelete()
             {
                 Name = userDat.Name,
@@ -176,8 +178,7 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 newOrder.IsSuccessFull = true;
                 orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
-                IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
-                ordersDataStore.Add(newOrder);
+                
                 string jsonOrderSuccessFull = orderCopy.SaveToJson();
                 string filename = $"{newOrder.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
                 System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);

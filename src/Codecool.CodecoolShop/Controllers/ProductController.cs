@@ -181,21 +181,58 @@ namespace Codecool.CodecoolShop.Controllers
                                                         "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
                                                         "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
+            User currentUser = UserService.GetUser(1);
+            Order newOrder = new Order(currentUser, userData);
+            var userDat = newOrder.User;
+            var userAddress = newOrder.UserPersonalInformation;
+            IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
+            ordersDataStore.Add(newOrder);
+            OrderForDelete orderCopy = new OrderForDelete()
+            {
+                Name = userDat.Name,
+                UserId = userDat.UserId,
+                ShoppingCart = userDat.ShoppingCart,
+                ShoppingCartValue = userDat.ShoppingCartValue,
+                FirstName = userAddress.FirstName,
+                LastName = userAddress.LastName,
+                Email = userAddress.Email,
+                PhoneNumber = userAddress.PhoneNumber,
+                BillingAddress = userAddress.BillingAddress,
+                BillingCity = userAddress.BillingCity,
+                BillingCountry = userAddress.BillingCountry,
+                BillingZip = userAddress.BillingZip,
+                ShippingAddress = userAddress.ShippingAddress,
+                ShippingCity = userAddress.ShippingCity,
+                ShippingCountry = userAddress.ShippingCountry,
+                ShippingZip = userAddress.ShippingZip,
+                OrderId = newOrder.OrderId,
+                OrderDateTime = newOrder.OrderDateTime,
+                IsPayed = newOrder.UserPersonalInformation.IsPayedNow,
+                IsSuccessFull = newOrder.IsSuccessFull
+            };
             if (ModelState.IsValid)
             {
-                User currentUser = UserService.GetUser(1);
-                Order newOrder = new Order(currentUser, userData);
-                IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
-                ordersDataStore.Add(newOrder);
-                //var x = OrderService.GetNewestOrder();
+                newOrder.IsSuccessFull = true;
+                orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
+                
+                string jsonOrderSuccessFull = orderCopy.SaveToJson();
+                string filename = $"{newOrder.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
+                System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);
                 if (newOrder.UserPersonalInformation.IsPayedNow)
                 {
                     return RedirectToAction(nameof(Payment));
                 }
                 return RedirectToAction(nameof(OrderDetails));
             }
+            newOrder.IsSuccessFull = false;
+            orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
+            string jsonOrderFailed = orderCopy.SaveToJson();
+            string filename2 = $"{newOrder.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
+            System.IO.File.WriteAllText($@".\AdminLog\{filename2}.json", jsonOrderFailed);
             return View(userData);
         }
+
+        
 
         [HttpGet]
         public IActionResult Payment()

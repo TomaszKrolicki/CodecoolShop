@@ -150,7 +150,11 @@ namespace Codecool.CodecoolShop.Controllers
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
                 //var x = OrderService.GetNewestOrder();
-                return RedirectToAction(nameof(Payment));
+                if (newOrder.UserPersonalInformation.IsPayedNow)
+                {
+                    return RedirectToAction(nameof(Payment));
+                }
+                return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);
         }
@@ -165,11 +169,6 @@ namespace Codecool.CodecoolShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                User currentUser = UserService.GetUser(1);
-                if (newOrder.UserPersonalInformation.IsPayedNow)
-                {
-                    //return RedirectToAction(nameof(Payment));
-                }
                 return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Mail;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Codecool.CodecoolShop.Daos;
@@ -113,6 +114,9 @@ namespace Codecool.CodecoolShop.Controllers
                 ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.OrderId,
                 OrderDateTime = newestOrder.OrderDateTime, IsPayed = newestOrder.UserPersonalInformation.IsPayedNow
             };
+            var mail = new MailSenderService();
+            
+            mail.MailSender(orderCopy);
             newestOrder.User.ShoppingCart = new List<Product>();
             newestOrder.User.ShoppingCartValue = 0;
             return View(orderCopy);
@@ -179,7 +183,7 @@ namespace Codecool.CodecoolShop.Controllers
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
                 string jsonOrderSuccessFull = orderCopy.SaveToJson();
-                string filename = $"{newOrder.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
+                string filename = $"{orderCopy.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
                 System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);
                 if (newOrder.UserPersonalInformation.IsPayedNow)
                 {
@@ -190,7 +194,7 @@ namespace Codecool.CodecoolShop.Controllers
             newOrder.IsSuccessFull = false;
             orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
             string jsonOrderFailed = orderCopy.SaveToJson();
-            string filename2 = $"{newOrder.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
+            string filename2 = $"{orderCopy.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
             System.IO.File.WriteAllText($@".\AdminLog\{filename2}.json", jsonOrderFailed);
             return View(userData);
         }

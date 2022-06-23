@@ -7,6 +7,7 @@ namespace Codecool.CodecoolShop.Models
         public string Currency { get; set; }
         public decimal DefaultPrice { get; set; }
         public int Quantity { get; set; }
+        public int MaxInStock { get; set; }
         public ProductCategory ProductCategory { get; set; }
         public Supplier Supplier { get; set; }
 
@@ -15,5 +16,6 @@ namespace Codecool.CodecoolShop.Models
             ProductCategory = productCategory;
             ProductCategory.Products.Add(this);
         }
+
     }
 }

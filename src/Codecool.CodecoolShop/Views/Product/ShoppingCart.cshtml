@@ -21,7 +21,7 @@
             </div>
             <div class="product-description-container">
                 <div class="product-quantity-container">
-                    <input type="number" min="1" max="@item.Quantity" value="1" onclick="onClickEventInput()"/>
+                    <input type="number" min="1" max="@item.MaxInStock" value="@item.Quantity" onclick="onClickEventInput()"/>
                     <p>@item.DefaultPrice$</p>
                 </div>
                 <p>@item.Description</p>
@@ -32,4 +32,12 @@
     }
 
 <p id="checkoutvalue">Total cart value @cartValue$</p>
-<a asp-controller="Product" asp-action="Checkout">Checkout</a>
+@if (Model.ShoppingCart.Count > 0)
+{
+    <a asp-controller="Product" asp-action="Checkout">Checkout</a>
+}
+else
+{
+    <p>Your shopping cart is empty!</p>
+}
+

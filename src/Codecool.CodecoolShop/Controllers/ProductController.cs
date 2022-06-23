@@ -18,6 +18,7 @@ namespace Codecool.CodecoolShop.Controllers
         private readonly ILogger<ProductController> _logger;
         public ProductService ProductService { get; set; }
         public UserService UserService { get; set; }
+        public OrderService OrderService { get; set; }
 
         private ProductsAndFilters _productsAndFilters;
 
@@ -30,6 +31,7 @@ namespace Codecool.CodecoolShop.Controllers
                 ProductCategoryDaoMemory.GetInstance(),
                 SupplierDaoMemory.GetInstance());
             UserService = new UserService(UserDaoMemory.GetInstance());
+            OrderService = new OrderService(OrderDaoMemory.GetInstance());
         }
 
         private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
@@ -52,14 +54,31 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
+            var user = UserService.GetUser(1);
             if (orderedProductId != -1)
             {
-                var user = UserService.GetUser(1);
-                
                 var allProducts = GetFilteredProducts(0, 0);
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
-                user.ShoppingCart.Add(orderedProduct);
-
+                if (user.ShoppingCart.Any(p=>p.Id == orderedProductId))
+                {
+                    var product = user.ShoppingCart.First(e => e.Id == orderedProductId);
+                    product.Quantity++;
+                    user.ShoppingCartValue += orderedProduct.DefaultPrice;
+                    if (product.Quantity > product.MaxInStock)
+                    {
+                        var numberToDelete = product.Quantity - product.MaxInStock;
+                        user.ShoppingCartValue -= numberToDelete * orderedProduct.DefaultPrice;
+                        product.Quantity = product.MaxInStock;
+                    }
+                }
+                else
+                {
+                    user.ShoppingCart.Add(new Product { Id = orderedProduct.Id, Name = orderedProduct.Name, DefaultPrice = orderedProduct.DefaultPrice,
+                        Currency = orderedProduct.Currency, Quantity = 1, MaxInStock = orderedProduct.MaxInStock, 
+                        Description = orderedProduct.Description, ProductCategory = orderedProduct.ProductCategory, 
+                        Supplier = orderedProduct.Supplier });
+                    user.ShoppingCartValue += orderedProduct.DefaultPrice;
+                }
 
             }
             _productsAndFilters = new ProductsAndFilters
@@ -69,6 +88,34 @@ namespace Codecool.CodecoolShop.Controllers
                 AllSuppliers = SupplierDaoMemory.GetInstance().GetAll()
             };
             return View(_productsAndFilters);
+        }
+
+        public IActionResult OrderDetails()
+        {
+            var newestOrder = OrderService.GetNewestOrder();
+            var allProducts = GetFilteredProducts(0, 0);
+            foreach (Product product in newestOrder.User.ShoppingCart)
+            {
+                allProducts.First(e => e.Id == product.Id).Quantity -= product.Quantity;
+                allProducts.First(e => e.Id == product.Id).MaxInStock -= product.Quantity;
+            }
+
+            var userData = newestOrder.User;
+            var userAddress = newestOrder.UserPersonalInformation;
+            OrderForDelete orderCopy = new OrderForDelete()
+            {
+                Name = userData.Name, UserId = userData.UserId,
+                ShoppingCart = userData.ShoppingCart, ShoppingCartValue = userData.ShoppingCartValue,
+                FirstName = userAddress.FirstName, LastName = userAddress.LastName, Email = userAddress.Email,
+                PhoneNumber = userAddress.PhoneNumber, BillingAddress = userAddress.BillingAddress, BillingCity = userAddress.BillingCity,
+                BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
+                ShippingAddress = userAddress.ShippingAddress, ShippingCity = userAddress.ShippingCity,
+                ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.OrderId,
+                OrderDateTime = newestOrder.OrderDateTime, IsPayed = newestOrder.UserPersonalInformation.IsPayedNow
+            };
+            newestOrder.User.ShoppingCart = new List<Product>();
+            newestOrder.User.ShoppingCartValue = 0;
+            return View(orderCopy);
         }
 
         public IActionResult Privacy()
@@ -94,11 +141,39 @@ namespace Codecool.CodecoolShop.Controllers
         }
         
         [HttpPost, ValidateAntiForgeryToken]
-        public IActionResult Checkout(UserDataToCheck user)
+        public async Task<IActionResult> Checkout([Bind("FirstName,LastName,Email,PhoneNumber," +
+                                                        "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
+                                                        "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
-            return Content($"Hello {user.FirstName} {user.LastName}");
+            if (ModelState.IsValid)
+            {
+                User currentUser = UserService.GetUser(1);
+                Order newOrder = new Order(currentUser, userData);
+                IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
+                ordersDataStore.Add(newOrder);
+                //var x = OrderService.GetNewestOrder();
+                if (newOrder.UserPersonalInformation.IsPayedNow)
+                {
+                    return RedirectToAction(nameof(Payment));
+                }
+                return RedirectToAction(nameof(OrderDetails));
+            }
+            return View(userData);
         }
 
-
+        [HttpGet]
+        public IActionResult Payment()
+        {
+            return View();
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Payment([Bind("FirstName,LastName,CardNumber,ExpiryDate,CvvCode")] PaymentDataToCheck userData)
+        {
+            if (ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(OrderDetails));
+            }
+            return View(userData);
+        }
     }
 }

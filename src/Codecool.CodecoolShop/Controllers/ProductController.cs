@@ -122,10 +122,46 @@ namespace Codecool.CodecoolShop.Controllers
         {
             return View();
         }
+        [HttpGet]
         public IActionResult ShoppingCart()
         {
             var user = UserService.GetUser(1);
             return View(user);
+        }
+
+        //public IActionResult ShoppingCartCheckout(User user)
+        //{
+        //    return RedirectToAction(nameof(Checkout));
+        //}
+
+        public IActionResult PlusQuantity(int id)
+        {
+            var user = UserService.GetUser(1);
+            var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
+            if (product.Quantity == product.MaxInStock)
+            {
+                product.Quantity = product.MaxInStock;
+            }
+            else
+            {
+                product.Quantity++;
+                user.ShoppingCartValue += product.DefaultPrice;
+            }
+                
+            return RedirectToAction(nameof(ShoppingCart));
+        }
+
+        public IActionResult MinusQuantity(int id)
+        {
+            var user = UserService.GetUser(1);
+            var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
+            product.Quantity--;
+            user.ShoppingCartValue -= product.DefaultPrice;
+            if (product.Quantity == 0)
+            {
+                user.ShoppingCart.Remove(product);
+            }
+            return RedirectToAction(nameof(ShoppingCart));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

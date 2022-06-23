@@ -1,6 +1,7 @@
 ﻿var sum = document.getElementById("checkoutvalue").innerHTML;
 var floatCartValue;
 activeOnClickEvent();
+onClickEventInput()
 
 function activeOnClickEvent() {
     var cartValue = "";

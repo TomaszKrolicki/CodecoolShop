@@ -63,8 +63,11 @@ namespace Codecool.CodecoolShop.Controllers
                 {
                     var product = user.ShoppingCart.First(e => e.Id == orderedProductId);
                     product.Quantity++;
+                    user.ShoppingCartValue += orderedProduct.DefaultPrice;
                     if (product.Quantity > product.MaxInStock)
                     {
+                        var numberToDelete = product.Quantity - product.MaxInStock;
+                        user.ShoppingCartValue -= numberToDelete * orderedProduct.DefaultPrice;
                         product.Quantity = product.MaxInStock;
                     }
                 }
@@ -74,9 +77,8 @@ namespace Codecool.CodecoolShop.Controllers
                         Currency = orderedProduct.Currency, Quantity = 1, MaxInStock = orderedProduct.MaxInStock, 
                         Description = orderedProduct.Description, ProductCategory = orderedProduct.ProductCategory, 
                         Supplier = orderedProduct.Supplier });
+                    user.ShoppingCartValue += orderedProduct.DefaultPrice;
                 }
-
-                user.ShoppingCartValue += orderedProduct.DefaultPrice;
 
             }
             _productsAndFilters = new ProductsAndFilters
@@ -109,7 +111,7 @@ namespace Codecool.CodecoolShop.Controllers
                 BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
                 ShippingAddress = userAddress.ShippingAddress, ShippingCity = userAddress.ShippingCity,
                 ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.OrderId,
-                OrderDateTime = newestOrder.OrderDateTime
+                OrderDateTime = newestOrder.OrderDateTime, IsPayed = newestOrder.UserPersonalInformation.IsPayedNow
             };
             newestOrder.User.ShoppingCart = new List<Product>();
             newestOrder.User.ShoppingCartValue = 0;

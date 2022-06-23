@@ -50,4 +50,14 @@
     <p>Address: @Model.ShippingAddress</p>
 </div>
 
+<br/>
+@if (Model.IsPayed)
+{
+    <p>This order is already payed!</p>
+}
+else
+{
+    <p>You will have to pay @Model.ShoppingCartValue$ upon receipt!</p>
+}
+
 <a asp-controller="Product" asp-action="Index">Go to main page</a>

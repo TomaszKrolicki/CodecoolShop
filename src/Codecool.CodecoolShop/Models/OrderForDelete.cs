@@ -25,5 +25,6 @@ namespace Codecool.CodecoolShop.Models
 
         public DateTime OrderDateTime { get; set; }
         public int OrderId { get; set; }
+        public bool IsPayed { get; set; }
     }
 }

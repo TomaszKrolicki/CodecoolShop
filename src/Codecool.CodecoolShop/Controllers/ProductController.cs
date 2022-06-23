@@ -122,6 +122,22 @@ namespace Codecool.CodecoolShop.Controllers
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
                 //var x = OrderService.GetNewestOrder();
+                return RedirectToAction(nameof(Payment));
+            }
+            return View(userData);
+        }
+
+        [HttpGet]
+        public IActionResult Payment()
+        {
+            return View();
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Payment([Bind("FirstName,LastName,CardNumber,ExpiryDate,CvvCode")] PaymentDataToCheck userData)
+        {
+            if (ModelState.IsValid)
+            {
+                User currentUser = UserService.GetUser(1);
                 return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);

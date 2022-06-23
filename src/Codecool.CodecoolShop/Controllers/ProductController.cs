@@ -151,10 +151,26 @@ namespace Codecool.CodecoolShop.Controllers
                 Order newOrder = new Order(currentUser, userData);
                 IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
                 ordersDataStore.Add(newOrder);
+                //var x = OrderService.GetNewestOrder();
                 if (newOrder.UserPersonalInformation.IsPayedNow)
                 {
-                    //return RedirectToAction(nameof(Payment));
+                    return RedirectToAction(nameof(Payment));
                 }
+                return RedirectToAction(nameof(OrderDetails));
+            }
+            return View(userData);
+        }
+
+        [HttpGet]
+        public IActionResult Payment()
+        {
+            return View();
+        }
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<IActionResult> Payment([Bind("FirstName,LastName,CardNumber,ExpiryDate,CvvCode")] PaymentDataToCheck userData)
+        {
+            if (ModelState.IsValid)
+            {
                 return RedirectToAction(nameof(OrderDetails));
             }
             return View(userData);

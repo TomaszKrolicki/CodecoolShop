@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+@model Codecool.CodecoolShop.Models.PaymentDataToCheck
+<div class="container">
+
+    <form asp-action="Payment" asp-controller="Product">
+        <div style="position: relative; left: 10%;">
+
+            <div class="col-lg-3 col-lg-3" style="display: inline-block;">
+                <p>CARD HOLDER CREDENTIALS</p>
+                <div>
+                    <label asp-for="FirstName"></label><br/>
+                    <input asp-for="FirstName" placeholder="First Name"/><br/>
+                    <span asp-validation-for="FirstName" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="LastName"></label><br/>
+                    <input asp-for="LastName" placeholder="Last Name"/><br/>
+                    <span asp-validation-for="LastName" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="CardNumber"></label><br/>
+                    <input asp-for="CardNumber" placeholder="Card Number"/><br/>
+                    <span asp-validation-for="CardNumber" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="ExpiryDate"></label><br/>
+                    <input asp-for="ExpiryDate" placeholder="Expiry Date"/><br/>
+                    <span asp-validation-for="ExpiryDate" class="text-danger"></span><br/>
+                </div>
+                <div>
+                    <label asp-for="CvvCode"></label><br/>
+                    <input asp-for="CvvCode" placeholder="CVV Code"/><br/>
+                    <span asp-validation-for="CvvCode" class="text-danger"></span><br/>
+                </div>
+                
+                
+            </div>
+
+
+            <br />
+            <input style="position: absolute; left: 30%; bottom: -10%" type="submit" value="Pay Now"/><br>
+        </div>
+    </form>
+
+
+</div>
+

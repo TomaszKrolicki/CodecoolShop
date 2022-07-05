@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codecool.CodecoolShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Codecool.CodecoolShop.Data
 {
-    public class IdentityDBContext : IdentityDbContext<IdentityUser>
+    public class CodeCoolDBContext : IdentityDbContext<IdentityUser>
     {
-        public IdentityDBContext(DbContextOptions<IdentityDBContext> options)
+        public DbSet<Supplier> Suppliers { get; set; }
+        public CodeCoolDBContext(DbContextOptions<CodeCoolDBContext> options)
             : base(options)
         {
         }

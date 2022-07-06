@@ -19,7 +19,7 @@ namespace Codecool.CodecoolShop.Services
         }
         public Order GetNewestOrder()
         {
-            return this.GetAllOrders().OrderByDescending(order => order.OrderId).First();
+            return this.GetAllOrders().OrderByDescending(order => order.Id).First();
         }
         public IEnumerable<Order> GetAllOrders()
         {

@@ -3,8 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Codecool.CodecoolShop.Models
 {
-    public class UserDataToCheck
+    public class UserDataToCheck : BaseModel
     {
+        public User User { get; set; }
+
         [DisplayName("First Name")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]
         [Required]

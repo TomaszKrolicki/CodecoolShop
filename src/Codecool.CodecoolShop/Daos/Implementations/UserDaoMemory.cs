@@ -28,11 +28,11 @@ namespace Codecool.CodecoolShop.Daos.Implementations
         {
             if (data.Count == 0)
             {
-                item.UserId = 1;
+                item.Id = "1";
             }
             else
             {
-                item.UserId = data.Max(e => e.UserId) + 1;
+                item.Id = data.Max(e => e.Id) + 1;
             }
             data.Add(item);
         }
@@ -43,7 +43,7 @@ namespace Codecool.CodecoolShop.Daos.Implementations
         }
         public User Get(int id)
         {
-            return data.Find(x => x.UserId == id);
+            return data.Find(x => x.Id == id.ToString());
         }
         public IEnumerable<User> GetAll()
         {

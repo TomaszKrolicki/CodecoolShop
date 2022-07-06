@@ -10,6 +10,7 @@ using Codecool.CodecoolShop.Daos.Implementations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Codecool.CodecoolShop.Models;
+using Codecool.CodecoolShop.Repository.IRepository;
 using Codecool.CodecoolShop.Services;
 
 namespace Codecool.CodecoolShop.Controllers
@@ -23,8 +24,17 @@ namespace Codecool.CodecoolShop.Controllers
 
         private ProductsAndFilters _productsAndFilters;
 
+        //Stworzyæ obiekt koszyk i do niego dodawaæ shoppigcartvalue i po zakupach go clearowaæ 
+        // dodaæ coœ co obs³uguje to repository/unitofwork 
 
-        public ProductController(ILogger<ProductController> logger)
+        // _unitOfWork.Order.Get(0);  -> powinno dzia³aæ dla order id 0 
+
+        private readonly IUnitOfWork _unitOfWork;
+        
+
+
+
+        public ProductController(ILogger<ProductController> logger) //, IUnitOfWork unitOfWork
         {
             _logger = logger;
             ProductService = new ProductService(
@@ -33,7 +43,10 @@ namespace Codecool.CodecoolShop.Controllers
                 SupplierDaoMemory.GetInstance());
             UserService = new UserService(UserDaoMemory.GetInstance());
             OrderService = new OrderService(OrderDaoMemory.GetInstance());
+            //_unitOfWork = unitOfWork;
         }
+
+        
 
         private IEnumerable<Product> GetFilteredProducts(int categoryId, int supplierId)
         {
@@ -102,17 +115,17 @@ namespace Codecool.CodecoolShop.Controllers
             }
 
             var userData = newestOrder.User;
-            var userAddress = newestOrder.UserPersonalInformation;
+            var userAddress = newestOrder.User;
             OrderForDelete orderCopy = new OrderForDelete()
             {
-                Name = userData.Name, UserId = userData.UserId,
+                Name = userData.Name, UserId = userData.Id,
                 ShoppingCart = userData.ShoppingCart, ShoppingCartValue = userData.ShoppingCartValue,
                 FirstName = userAddress.FirstName, LastName = userAddress.LastName, Email = userAddress.Email,
                 PhoneNumber = userAddress.PhoneNumber, BillingAddress = userAddress.BillingAddress, BillingCity = userAddress.BillingCity,
                 BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
                 ShippingAddress = userAddress.ShippingAddress, ShippingCity = userAddress.ShippingCity,
-                ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.OrderId,
-                OrderDateTime = newestOrder.OrderDateTime, IsPayed = newestOrder.UserPersonalInformation.IsPayedNow
+                ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.Id,
+                OrderDateTime = newestOrder.OrderDateTime, IsPayed = newestOrder.IsPayedNow
             };
             var mail = new MailSenderService();
             
@@ -186,15 +199,32 @@ namespace Codecool.CodecoolShop.Controllers
                                                         "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
             User currentUser = UserService.GetUser(1);
-            Order newOrder = new Order(currentUser, userData);
+            userData.User = currentUser;
+            Order newOrder = new Order();
+            newOrder.User = currentUser;
+            //newOrder.UserPersonalInformation = userData;
+            newOrder.IsPayedNow = userData.IsPayedNow;
+            newOrder.OrderDateTime = DateTime.Now;
             var userDat = newOrder.User;
-            var userAddress = newOrder.UserPersonalInformation;
+            var userAddress = newOrder.User;
             IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
             ordersDataStore.Add(newOrder);
+            currentUser.FirstName = userAddress.FirstName;
+            currentUser.LastName = userAddress.LastName;
+            currentUser.Email = userAddress.Email;
+            currentUser.PhoneNumber = userAddress.PhoneNumber;
+            currentUser.BillingAddress = userAddress.BillingAddress;
+            currentUser.BillingCity = userAddress.BillingCity;
+            currentUser.BillingCountry = userAddress.BillingCountry;
+            currentUser.BillingZip = userAddress.BillingZip;
+            currentUser.ShippingAddress = userAddress.ShippingAddress;
+            currentUser.ShippingCity = userAddress.ShippingCity;
+            currentUser.ShippingCountry = userAddress.ShippingCountry;
+            currentUser.ShippingZip = userAddress.ShippingZip;
             OrderForDelete orderCopy = new OrderForDelete()
             {
                 Name = userDat.Name,
-                UserId = userDat.UserId,
+                UserId = userDat.Id,
                 ShoppingCart = userDat.ShoppingCart,
                 ShoppingCartValue = userDat.ShoppingCartValue,
                 FirstName = userAddress.FirstName,
@@ -209,9 +239,9 @@ namespace Codecool.CodecoolShop.Controllers
                 ShippingCity = userAddress.ShippingCity,
                 ShippingCountry = userAddress.ShippingCountry,
                 ShippingZip = userAddress.ShippingZip,
-                OrderId = newOrder.OrderId,
+                OrderId = newOrder.Id,
                 OrderDateTime = newOrder.OrderDateTime,
-                IsPayed = newOrder.UserPersonalInformation.IsPayedNow,
+                IsPayed = newOrder.IsPayedNow,
                 IsSuccessFull = newOrder.IsSuccessFull
             };
             if (ModelState.IsValid)
@@ -222,7 +252,7 @@ namespace Codecool.CodecoolShop.Controllers
                 string jsonOrderSuccessFull = orderCopy.SaveToJson();
                 string filename = $"{orderCopy.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
                 System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);
-                if (newOrder.UserPersonalInformation.IsPayedNow)
+                if (newOrder.IsPayedNow)
                 {
                     return RedirectToAction(nameof(Payment));
                 }

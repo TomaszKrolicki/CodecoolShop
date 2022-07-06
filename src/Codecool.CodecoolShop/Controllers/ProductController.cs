@@ -112,6 +112,7 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult OrderDetails()
         {
             var newestOrder = OrderService.GetNewestOrder();
+            newestOrder = _unitOfWork.Order.Get(0);
             var allProducts = GetFilteredProducts(0, 0);
             foreach (Product product in newestOrder.User.ShoppingCart)
             {

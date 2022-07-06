@@ -4,6 +4,7 @@ using Codecool.CodecoolShop.Repository.IRepository;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Codecool.CodecoolShop.Models;
 
 namespace Codecool.CodecoolShop.Repository
 {
@@ -15,10 +16,12 @@ namespace Codecool.CodecoolShop.Repository
         {
             _db = db;
             Order = new OrderRepository(_db);
+            User = new UserRepository(_db);
         }
 
 
         public IOrderRepository Order { get; private set; }
+        public IUserRepository User { get; private set; }
 
 
         public void Dispose()

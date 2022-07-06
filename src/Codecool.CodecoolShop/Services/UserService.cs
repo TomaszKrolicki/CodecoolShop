@@ -16,5 +16,9 @@ namespace Codecool.CodecoolShop.Services
         {
             return this.userDao.Get(userId);
         }
+        public User GetUserByName(string name)
+        {
+            return this.userDao.GetByName(name);
+        }
     }
 }

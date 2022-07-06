@@ -68,7 +68,7 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
-            var user = UserService.GetUser(1);
+            var user = UserService.GetUserByName("Janusz");
             if (orderedProductId != -1)
             {
                 var allProducts = GetFilteredProducts(0, 0);
@@ -153,7 +153,7 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult PlusQuantity(int id)
         {
-            var user = UserService.GetUser(1);
+            var user = UserService.GetUserByName("Janusz");
             var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
             if (product.Quantity == product.MaxInStock)
             {
@@ -170,7 +170,7 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult MinusQuantity(int id)
         {
-            var user = UserService.GetUser(1);
+            var user = UserService.GetUserByName("Janusz");
             var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
             product.Quantity--;
             user.ShoppingCartValue -= product.DefaultPrice;
@@ -198,47 +198,45 @@ namespace Codecool.CodecoolShop.Controllers
                                                         "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
                                                         "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
-            User currentUser = UserService.GetUser(1);
-            userData.User = currentUser;
+            User currentUser = UserService.GetUserByName("Janusz");
             Order newOrder = new Order();
-            newOrder.User = currentUser;
-            //newOrder.UserPersonalInformation = userData;
             newOrder.IsPayedNow = userData.IsPayedNow;
             newOrder.OrderDateTime = DateTime.Now;
-            var userDat = newOrder.User;
-            var userAddress = newOrder.User;
+            
             IAllOrdersDao ordersDataStore = OrderDaoMemory.GetInstance();
             ordersDataStore.Add(newOrder);
-            currentUser.FirstName = userAddress.FirstName;
-            currentUser.LastName = userAddress.LastName;
-            currentUser.Email = userAddress.Email;
-            currentUser.PhoneNumber = userAddress.PhoneNumber;
-            currentUser.BillingAddress = userAddress.BillingAddress;
-            currentUser.BillingCity = userAddress.BillingCity;
-            currentUser.BillingCountry = userAddress.BillingCountry;
-            currentUser.BillingZip = userAddress.BillingZip;
-            currentUser.ShippingAddress = userAddress.ShippingAddress;
-            currentUser.ShippingCity = userAddress.ShippingCity;
-            currentUser.ShippingCountry = userAddress.ShippingCountry;
-            currentUser.ShippingZip = userAddress.ShippingZip;
+            currentUser.FirstName = userData.FirstName;
+            currentUser.LastName = userData.LastName;
+            currentUser.Email = userData.Email;
+            currentUser.PhoneNumber = userData.PhoneNumber;
+            currentUser.BillingAddress = userData.BillingAddress;
+            currentUser.BillingCity = userData.BillingCity;
+            currentUser.BillingCountry = userData.BillingCountry;
+            currentUser.BillingZip = userData.BillingZip;
+            currentUser.ShippingAddress = userData.ShippingAddress;
+            currentUser.ShippingCity = userData.ShippingCity;
+            currentUser.ShippingCountry = userData.ShippingCountry;
+            currentUser.ShippingZip = userData.ShippingZip;
+            var userDat = currentUser;
+            newOrder.User = currentUser;
             OrderForDelete orderCopy = new OrderForDelete()
             {
                 Name = userDat.Name,
                 UserId = userDat.Id,
                 ShoppingCart = userDat.ShoppingCart,
                 ShoppingCartValue = userDat.ShoppingCartValue,
-                FirstName = userAddress.FirstName,
-                LastName = userAddress.LastName,
-                Email = userAddress.Email,
-                PhoneNumber = userAddress.PhoneNumber,
-                BillingAddress = userAddress.BillingAddress,
-                BillingCity = userAddress.BillingCity,
-                BillingCountry = userAddress.BillingCountry,
-                BillingZip = userAddress.BillingZip,
-                ShippingAddress = userAddress.ShippingAddress,
-                ShippingCity = userAddress.ShippingCity,
-                ShippingCountry = userAddress.ShippingCountry,
-                ShippingZip = userAddress.ShippingZip,
+                FirstName = userData.FirstName,
+                LastName = userData.LastName,
+                Email = userData.Email,
+                PhoneNumber = userData.PhoneNumber,
+                BillingAddress = userData.BillingAddress,
+                BillingCity = userData.BillingCity,
+                BillingCountry = userData.BillingCountry,
+                BillingZip = userData.BillingZip,
+                ShippingAddress = userData.ShippingAddress,
+                ShippingCity = userData.ShippingCity,
+                ShippingCountry = userData.ShippingCountry,
+                ShippingZip = userData.ShippingZip,
                 OrderId = newOrder.Id,
                 OrderDateTime = newOrder.OrderDateTime,
                 IsPayed = newOrder.IsPayedNow,

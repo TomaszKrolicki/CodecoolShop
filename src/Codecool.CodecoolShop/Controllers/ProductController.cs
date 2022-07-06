@@ -68,6 +68,7 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
+            
             var user = UserService.GetUserByName("Janusz");
             if (orderedProductId != -1)
             {

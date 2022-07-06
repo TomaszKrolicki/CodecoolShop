@@ -22,5 +22,10 @@ namespace Codecool.CodecoolShop.Repository
         {
             _db.Update(obj);
         }
+
+        //public void Add(Order obj)
+        //{
+        //    _db.Add(obj);
+        //}
     }
 }

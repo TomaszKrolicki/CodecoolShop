@@ -11,7 +11,7 @@ namespace Codecool.CodecoolShop.Models
         //[Required]
         //public int ProductId { get; set; }
         //[ForeignKey(nameof(ProductId))]
-        public List<Product> Products { get; set; }
+        public Product Product { get; set; }
         [Required]
         public int CartId { get; set; }
         [ForeignKey(nameof(CartId))]

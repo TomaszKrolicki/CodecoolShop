@@ -52,15 +52,15 @@ namespace Codecool.CodecoolShop.Controllers
         {
             if (categoryId == 0 && supplierId == 0)
             {
-                return ProductService.GetAllProducts();
+                return _unitOfWork.Product.GetAll();
             }
             else if (categoryId != 0 && supplierId == 0)
             {
-                return ProductService.GetProductsForCategory(categoryId);
+                return _unitOfWork.Product.GetProductsForCategory(categoryId);
             }
             else if (categoryId == 0 && supplierId != 0)
             {
-                return ProductService.GetProductsForSupplier(supplierId);
+                return _unitOfWork.Product.GetProductsForSupplier(supplierId);
             } 
             return ProductService.GetProductsForSupplierAndCategory(supplierId, categoryId);
                 
@@ -68,13 +68,22 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
-            
-            var user = UserService.GetUserByName("Janusz");
+            //Supplier lenovo = new Supplier { Name = "Lenovo", Description = "Computers" };
+            //_unitOfWork.Supplier.Add(lenovo);
+            //ProductCategory computer = new ProductCategory { Name = "Computer", Department = "PC", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
+            //_unitOfWork.ProductCategory.Add(computer);
+            //_unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", Quantity = 1, MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", Quantity = 5, MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", Quantity = 0, MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", Quantity = 7, MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+
+            //_unitOfWork.Save();
             //int cos = 1;
             //if (User.Identity.IsAuthenticated)
             //{
             //    cos = 3;
             //}
+            var user = UserService.GetUserByName("Janusz");
             if (orderedProductId != -1)
             {
                 var allProducts = GetFilteredProducts(0, 0);
@@ -104,8 +113,8 @@ namespace Codecool.CodecoolShop.Controllers
             _productsAndFilters = new ProductsAndFilters
             {
                 AllProducts = GetFilteredProducts(categoryId, supplierId).ToList(),
-                AllProductCategories = ProductCategoryDaoMemory.GetInstance().GetAll(),
-                AllSuppliers = SupplierDaoMemory.GetInstance().GetAll()
+                AllProductCategories = _unitOfWork.ProductCategory.GetAll(),
+                AllSuppliers = _unitOfWork.Supplier.GetAll()
             };
             return View(_productsAndFilters);
         }

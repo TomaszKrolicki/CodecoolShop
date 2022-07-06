@@ -9,6 +9,9 @@ namespace Codecool.CodecoolShop.Repository.IRepository
     {
         IOrderRepository Order { get; }
         IUserRepository User { get; }
+        IProductRepository Product { get; }
+        ISupplierRepository Supplier { get; }
+        IProductCategoryRepository ProductCategory { get; }
 
         void Save();
     }

@@ -8,5 +8,6 @@ namespace Codecool.CodecoolShop.Repository.IRepository
     public interface IOrderRepository : IRepository<Order>
     {
         void Update(Order obj);
+        Order GetWithDetails(int orderId);
     }
 }

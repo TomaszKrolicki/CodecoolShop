@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 
 namespace Codecool.CodecoolShop.Repository
 {
@@ -21,6 +22,12 @@ namespace Codecool.CodecoolShop.Repository
         public void Update(Order obj)
         {
             _db.Update(obj);
+        }
+
+        public Order GetWithDetails(int id)
+        {
+            return _db.Orders.Include(u => u.User).FirstOrDefault(x => x.Id == id);
+            // .theninclude()
         }
 
         //public void Add(Order obj)

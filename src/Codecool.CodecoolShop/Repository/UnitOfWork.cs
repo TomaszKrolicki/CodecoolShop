@@ -17,11 +17,17 @@ namespace Codecool.CodecoolShop.Repository
             _db = db;
             Order = new OrderRepository(_db);
             User = new UserRepository(_db);
+            Product = new ProductRepository(_db);
+            Supplier = new SupplierRepository(_db);
+            ProductCategory = new ProductCategoryRepository(_db);
         }
 
 
         public IOrderRepository Order { get; private set; }
         public IUserRepository User { get; private set; }
+        public IProductRepository Product { get; private set; }
+        public ISupplierRepository Supplier { get; private set; }
+        public IProductCategoryRepository ProductCategory { get; private set; }
 
 
         public void Dispose()

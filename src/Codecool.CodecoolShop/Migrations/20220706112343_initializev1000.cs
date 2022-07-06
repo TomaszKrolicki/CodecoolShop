@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Codecool.CodecoolShop.Migrations
 {
-    public partial class migration1 : Migration
+    public partial class initializev1000 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

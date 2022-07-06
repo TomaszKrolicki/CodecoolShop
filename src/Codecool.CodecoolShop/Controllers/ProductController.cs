@@ -34,7 +34,7 @@ namespace Codecool.CodecoolShop.Controllers
 
 
 
-        public ProductController(ILogger<ProductController> logger) //, IUnitOfWork unitOfWork
+        public ProductController(ILogger<ProductController> logger, IUnitOfWork unitOfWork) //
         {
             _logger = logger;
             ProductService = new ProductService(
@@ -43,7 +43,7 @@ namespace Codecool.CodecoolShop.Controllers
                 SupplierDaoMemory.GetInstance());
             UserService = new UserService(UserDaoMemory.GetInstance());
             OrderService = new OrderService(OrderDaoMemory.GetInstance());
-            //_unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         
@@ -69,6 +69,11 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
             var user = UserService.GetUserByName("Janusz");
+            int cos = 1;
+            if (User.Identity.IsAuthenticated)
+            {
+                cos = 3;
+            }
             if (orderedProductId != -1)
             {
                 var allProducts = GetFilteredProducts(0, 0);

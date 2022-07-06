@@ -7,24 +7,19 @@ using Codecool.CodecoolShop.Services;
 namespace Codecool.CodecoolShop.Models
 {
     [DataContract]
-    public class Order
+    public class Order : BaseModel
     {
         [DataMember]
         public User User { get; set; }
-        [DataMember]
-        public UserDataToCheck UserPersonalInformation { get; set; }
+        //[DataMember]
+        //public UserDataToCheck UserPersonalInformation { get; set; }
         [DataMember]
         public DateTime OrderDateTime { get; set; }
-        [DataMember]
-        public int OrderId { get; set; }
+
         [DataMember]
         public bool IsSuccessFull { get; set; }
-        public Order(User user, UserDataToCheck userPersonalInformation)
-        {
-            OrderDateTime = DateTime.Now;
-            User = user;
-            UserPersonalInformation = userPersonalInformation;
-        }
+        public bool IsPayedNow { get; set; }
+      
         public string SaveToJson()
         {
             DataContractJsonSerializer json = new DataContractJsonSerializer(typeof(Order));

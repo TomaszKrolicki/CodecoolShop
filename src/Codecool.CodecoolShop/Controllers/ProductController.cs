@@ -69,11 +69,11 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
             var user = UserService.GetUserByName("Janusz");
-            int cos = 1;
-            if (User.Identity.IsAuthenticated)
-            {
-                cos = 3;
-            }
+            //int cos = 1;
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    cos = 3;
+            //}
             if (orderedProductId != -1)
             {
                 var allProducts = GetFilteredProducts(0, 0);
@@ -111,8 +111,8 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult OrderDetails()
         {
-            var newestOrder = OrderService.GetNewestOrder();
-            newestOrder = _unitOfWork.Order.Get(0);
+            //var newestOrder = OrderService.GetNewestOrder();
+            var newestOrder = _unitOfWork.Order.Get(0);
             var allProducts = GetFilteredProducts(0, 0);
             foreach (Product product in newestOrder.User.ShoppingCart)
             {

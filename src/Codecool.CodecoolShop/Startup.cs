@@ -11,6 +11,7 @@ using Codecool.CodecoolShop.Repository.IRepository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +36,7 @@ namespace Codecool.CodecoolShop
                 options.UseSqlServer(Configuration.GetConnectionString("IdentityDBContextConnection"));
             });
 
+            //services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<CodeCoolDBContext>();
             services.AddControllersWithViews();
             services.AddRazorPages().AddRazorRuntimeCompilation();
             services.AddScoped<IUnitOfWork, UnitOfWork>();

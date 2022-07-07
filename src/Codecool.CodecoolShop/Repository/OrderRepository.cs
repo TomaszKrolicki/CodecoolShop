@@ -26,7 +26,7 @@ namespace Codecool.CodecoolShop.Repository
 
         public Order GetWithDetailsNewest()
         {
-            return _db.Orders.Include(u => u.User).LastOrDefault();
+            return _db.Orders.Include(u => u.User).ThenInclude(e => e.Cart).ThenInclude(e=>e.Details).ThenInclude(e=>e.Product).ThenInclude(e=>e.Supplier).OrderBy(i=>i.Id).LastOrDefault();
             // .theninclude()
         }
 

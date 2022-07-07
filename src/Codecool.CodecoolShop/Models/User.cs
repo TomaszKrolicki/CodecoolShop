@@ -33,11 +33,11 @@ namespace Codecool.CodecoolShop.Models
         [StringLength(30)]
         public string LastName { get; set; }
 
-        [DisplayName("Email")]
+        [DisplayName("EmailAddress")]
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$")]
         [Required]
         [StringLength(30)]
-        public string Email { get; set; }
+        public string EmailAddress { get; set; }
 
         [DisplayName("Phone Number")]
         [RegularExpression(@"^\d+$")]

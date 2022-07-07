@@ -141,7 +141,11 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult OrderDetails()
         {
+            var user = _unitOfWork.User.GetLast();
             var newestOrder = OrderService.GetNewestOrder();
+            newestOrder.Id = 0;
+            newestOrder.User = user;
+            _unitOfWork.User.Update(user);
             _unitOfWork.Order.Add(newestOrder);
             _unitOfWork.Save();
             // order z bazy 
@@ -161,7 +165,7 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 Name = userData.Name, UserId = userData.Id,
                 CartDetails = userData.Cart.Details, ShoppingCartValue = userData.ShoppingCartValue,
-                FirstName = userAddress.FirstName, LastName = userAddress.LastName, Email = userAddress.Email,
+                FirstName = userAddress.FirstName, LastName = userAddress.LastName, Email = userAddress.EmailAddress,
                 PhoneNumber = userAddress.PhoneNumber, BillingAddress = userAddress.BillingAddress, BillingCity = userAddress.BillingCity,
                 BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
                 ShippingAddress = userAddress.ShippingAddress, ShippingCity = userAddress.ShippingCity,
@@ -173,6 +177,8 @@ namespace Codecool.CodecoolShop.Controllers
             mail.MailSender(orderCopy);
             newOrder.User.Cart = new Cart();
             newOrder.User.ShoppingCartValue = 0;
+            _unitOfWork.User.Update(user);
+            _unitOfWork.Save();
             return View(orderCopy);
         }
 
@@ -195,7 +201,6 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult PlusQuantity(int id)
         {
             var user = _unitOfWork.User.GetLast();
-            //UserService.GetUserByName("Janusz");
             var product = user.Cart.Details.FirstOrDefault(e => e.Product.Id == id);
             if (product.Quantity == product.Product.MaxInStock)
             {
@@ -207,6 +212,7 @@ namespace Codecool.CodecoolShop.Controllers
                 user.ShoppingCartValue += product.Product.DefaultPrice;
             }
             _unitOfWork.User.Update(user);
+            _unitOfWork.Save();
                 
             return RedirectToAction(nameof(ShoppingCart));
         }
@@ -221,6 +227,8 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 user.Cart.Details.Remove(product);
             }
+            _unitOfWork.User.Update(user);
+            _unitOfWork.Save();
             return RedirectToAction(nameof(ShoppingCart));
         }
 
@@ -237,7 +245,7 @@ namespace Codecool.CodecoolShop.Controllers
         }
         
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<IActionResult> Checkout([Bind("FirstName,LastName,Email,PhoneNumber," +
+        public async Task<IActionResult> Checkout([Bind("FirstName,LastName,EmailAddress,PhoneNumber," +
                                                         "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
                                                         "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
@@ -250,7 +258,7 @@ namespace Codecool.CodecoolShop.Controllers
             ordersDataStore.Add(newOrder);
             currentUser.FirstName = userData.FirstName;
             currentUser.LastName = userData.LastName;
-            currentUser.Email = userData.Email;
+            currentUser.EmailAddress = userData.EmailAddress;
             currentUser.PhoneNumber = userData.PhoneNumber;
             currentUser.BillingAddress = userData.BillingAddress;
             currentUser.BillingCity = userData.BillingCity;
@@ -260,26 +268,27 @@ namespace Codecool.CodecoolShop.Controllers
             currentUser.ShippingCity = userData.ShippingCity;
             currentUser.ShippingCountry = userData.ShippingCountry;
             currentUser.ShippingZip = userData.ShippingZip;
-            var userDat = currentUser;
             newOrder.User = currentUser;
+            _unitOfWork.User.Update(currentUser);
+            _unitOfWork.Save();
             OrderForDelete orderCopy = new OrderForDelete()
             {
-                Name = userDat.Name,
-                UserId = userDat.Id,
-                CartDetails = userDat.Cart.Details,
-                ShoppingCartValue = userDat.ShoppingCartValue,
-                FirstName = userData.FirstName,
-                LastName = userData.LastName,
-                Email = userData.Email,
-                PhoneNumber = userData.PhoneNumber,
-                BillingAddress = userData.BillingAddress,
-                BillingCity = userData.BillingCity,
-                BillingCountry = userData.BillingCountry,
-                BillingZip = userData.BillingZip,
-                ShippingAddress = userData.ShippingAddress,
-                ShippingCity = userData.ShippingCity,
-                ShippingCountry = userData.ShippingCountry,
-                ShippingZip = userData.ShippingZip,
+                Name = currentUser.Name,
+                UserId = currentUser.Id,
+                CartDetails = currentUser.Cart.Details,
+                ShoppingCartValue = currentUser.ShoppingCartValue,
+                FirstName = currentUser.FirstName,
+                LastName = currentUser.LastName,
+                Email = currentUser.EmailAddress,
+                PhoneNumber = currentUser.PhoneNumber,
+                BillingAddress = currentUser.BillingAddress,
+                BillingCity = currentUser.BillingCity,
+                BillingCountry = currentUser.BillingCountry,
+                BillingZip = currentUser.BillingZip,
+                ShippingAddress = currentUser.ShippingAddress,
+                ShippingCity = currentUser.ShippingCity,
+                ShippingCountry = currentUser.ShippingCountry,
+                ShippingZip = currentUser.ShippingZip,
                 OrderId = newOrder.Id,
                 OrderDateTime = newOrder.OrderDateTime,
                 IsPayed = newOrder.IsPayedNow,

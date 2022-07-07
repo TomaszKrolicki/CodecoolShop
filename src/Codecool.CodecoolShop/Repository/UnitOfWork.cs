@@ -28,6 +28,7 @@ namespace Codecool.CodecoolShop.Repository
         public IProductRepository Product { get; private set; }
         public ISupplierRepository Supplier { get; private set; }
         public IProductCategoryRepository ProductCategory { get; private set; }
+        public ICartRepository Cart { get; private set; }
 
 
         public void Dispose()

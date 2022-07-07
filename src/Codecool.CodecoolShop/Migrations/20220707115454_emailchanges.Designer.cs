@@ -4,6 +4,7 @@ using Codecool.CodecoolShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codecool.CodecoolShop.Migrations
 {
     [DbContext(typeof(CodeCoolDBContext))]
-    partial class CodeCoolDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220707115454_emailchanges")]
+    partial class emailchanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -47,7 +47,7 @@ namespace Codecool.CodecoolShop.Areas.Identity.Pages.Account
         {
             [Required]
             [EmailAddress]
-            [Display(Name = "Email")]
+            [Display(Name = "EmailAddress")]
             public string Email { get; set; }
 
             [Required]

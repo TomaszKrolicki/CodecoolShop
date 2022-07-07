@@ -12,6 +12,7 @@ namespace Codecool.CodecoolShop.Repository.IRepository
         IProductRepository Product { get; }
         ISupplierRepository Supplier { get; }
         IProductCategoryRepository ProductCategory { get; }
+        ICartRepository Cart { get; }
 
         void Save();
     }

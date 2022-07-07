@@ -30,12 +30,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Carts");
                 });
@@ -51,9 +46,17 @@ namespace Codecool.CodecoolShop.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("CartDetail");
                 });
@@ -100,9 +103,6 @@ namespace Codecool.CodecoolShop.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int?>("CartDetailId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
 
@@ -122,24 +122,14 @@ namespace Codecool.CodecoolShop.Migrations
                     b.Property<int?>("ProductCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
                     b.Property<int?>("SupplierId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CartDetailId");
 
                     b.HasIndex("ProductCategoryId");
 
                     b.HasIndex("SupplierId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Products");
                 });
@@ -419,6 +409,9 @@ namespace Codecool.CodecoolShop.Migrations
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -455,16 +448,9 @@ namespace Codecool.CodecoolShop.Migrations
                     b.Property<decimal>("ShoppingCartValue")
                         .HasColumnType("decimal(18,2)");
 
+                    b.HasIndex("CartId");
+
                     b.HasDiscriminator().HasValue("User");
-                });
-
-            modelBuilder.Entity("Codecool.CodecoolShop.Models.Cart", b =>
-                {
-                    b.HasOne("Codecool.CodecoolShop.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.CartDetail", b =>
@@ -475,7 +461,13 @@ namespace Codecool.CodecoolShop.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Codecool.CodecoolShop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId");
+
                     b.Navigation("Cart");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Order", b =>
@@ -489,10 +481,6 @@ namespace Codecool.CodecoolShop.Migrations
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Product", b =>
                 {
-                    b.HasOne("Codecool.CodecoolShop.Models.CartDetail", null)
-                        .WithMany("Products")
-                        .HasForeignKey("CartDetailId");
-
                     b.HasOne("Codecool.CodecoolShop.Models.ProductCategory", "ProductCategory")
                         .WithMany("Products")
                         .HasForeignKey("ProductCategoryId");
@@ -500,10 +488,6 @@ namespace Codecool.CodecoolShop.Migrations
                     b.HasOne("Codecool.CodecoolShop.Models.Supplier", "Supplier")
                         .WithMany("Products")
                         .HasForeignKey("SupplierId");
-
-                    b.HasOne("Codecool.CodecoolShop.Models.User", null)
-                        .WithMany("ShoppingCart")
-                        .HasForeignKey("UserId");
 
                     b.Navigation("ProductCategory");
 
@@ -561,14 +545,18 @@ namespace Codecool.CodecoolShop.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Codecool.CodecoolShop.Models.User", b =>
+                {
+                    b.HasOne("Codecool.CodecoolShop.Models.Cart", "Cart")
+                        .WithMany()
+                        .HasForeignKey("CartId");
+
+                    b.Navigation("Cart");
+                });
+
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Cart", b =>
                 {
                     b.Navigation("Details");
-                });
-
-            modelBuilder.Entity("Codecool.CodecoolShop.Models.CartDetail", b =>
-                {
-                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.ProductCategory", b =>
@@ -579,11 +567,6 @@ namespace Codecool.CodecoolShop.Migrations
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Supplier", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Codecool.CodecoolShop.Models.User", b =>
-                {
-                    b.Navigation("ShoppingCart");
                 });
 #pragma warning restore 612, 618
         }

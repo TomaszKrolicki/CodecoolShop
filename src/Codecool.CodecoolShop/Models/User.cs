@@ -11,7 +11,7 @@ namespace Codecool.CodecoolShop.Models
         public User(string name)
         {
             Name = name;
-            ShoppingCart = new List<Product>();
+            Cart = new Cart();
         }
 
         public User()
@@ -19,7 +19,7 @@ namespace Codecool.CodecoolShop.Models
 
         }
         public string Name { get; set; }
-        public List<Product> ShoppingCart { get; set; }
+        public Cart Cart { get; set; }
 
         [DisplayName("First Name")]
         [RegularExpression(@"^[A-Z]+[a-zA-Z\s]*$")]

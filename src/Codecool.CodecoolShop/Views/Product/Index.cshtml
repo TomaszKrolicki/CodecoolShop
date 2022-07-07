@@ -20,9 +20,9 @@
                         <p class="card-text">@element.Description.</p>
                         <p class="card-text">Category: @element.ProductCategory.Department</p>
                         <p class="card-text">Supplier: @element.Supplier.Name</p>
-                        <p class="card-text">In stock: @element.Quantity pcs.</p>
+                        <p class="card-text">In stock: @element.MaxInStock pcs.</p>
                         <p class="card-text text-center"><strong>Price: @element.DefaultPrice.ToString("C2")</strong></p>
-                        @if (element.Quantity > 0)
+                        @if (element.MaxInStock > 0)
                         {
                             //<a href="" type="button" class="btn btn-primary" style="float: bottom">Add To Cart</a>
                             <a asp-controller="Product" asp-action="Index" asp-route-orderedProductId="@element.Id" type="button" class="btn btn-primary">Add To Cart</a>

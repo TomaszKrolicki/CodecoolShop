@@ -32,12 +32,12 @@ namespace Codecool.CodecoolShop.Services
         private string CreateMessage(OrderForDelete order)
         {
             string products = "";
-            for (int i = 0; i < order.ShoppingCart.Count; i++)
+            for (int i = 0; i < order.CartDetails.Count; i++)
             {
-                products += $"Product {i + 1}: " + order.ShoppingCart[i].Name + "\n";
-                products += "Supplier: " + order.ShoppingCart[i].Supplier.Name + "\n";
-                products += "Price for 1: " + order.ShoppingCart[i].DefaultPrice + "$\n";
-                products += "Quantity: " + order.ShoppingCart[i].Quantity + "\n\n";
+                products += $"Product {i + 1}: " + order.CartDetails[i].Product.Name + "\n";
+                products += "Supplier: " + order.CartDetails[i].Product.Supplier.Name + "\n";
+                products += "Price for 1: " + order.CartDetails[i].Product.DefaultPrice + "$\n";
+                products += "Quantity: " + order.CartDetails[i].Quantity + "\n\n";
             }
 
             string isPayed = "";

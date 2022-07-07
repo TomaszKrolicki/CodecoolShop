@@ -8,8 +8,9 @@ namespace Codecool.CodecoolShop.Models
     {
         [Key]
         public int Id { get; set; }
-        public List<CartDetail> Details { get; set; }
+        public List<CartDetail> Details { get; set; } = new List<CartDetail>();
 
-        public User User { get; set; }
+
+        
     }
 }

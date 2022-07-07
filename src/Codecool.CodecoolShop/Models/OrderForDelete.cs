@@ -17,7 +17,7 @@ namespace Codecool.CodecoolShop.Models
         [DataMember]
         public string UserId { get; set; }
         [DataMember]
-        public List<Product> ShoppingCart { get; set; }
+        public List<CartDetail> CartDetails { get; set; }
         [DataMember]
         public decimal ShoppingCartValue { get; set; }
         [DataMember]

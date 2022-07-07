@@ -32,7 +32,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.CartDetail", b =>
@@ -58,7 +58,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartDetail");
+                    b.ToTable("CartDetail", (string)null);
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Order", b =>
@@ -92,7 +92,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Product", b =>
@@ -131,7 +131,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.ProductCategory", b =>
@@ -154,7 +154,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Codecool.CodecoolShop.Models.Supplier", b =>
@@ -174,7 +174,7 @@ namespace Codecool.CodecoolShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

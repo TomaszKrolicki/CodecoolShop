@@ -8,5 +8,6 @@ namespace Codecool.CodecoolShop.Repository.IRepository
     public interface IUserRepository : IRepository<User>
     {
         void Update(User obj);
+        User GetLast();
     }
 }

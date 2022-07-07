@@ -70,33 +70,39 @@ namespace Codecool.CodecoolShop.Controllers
         {
             //Dodawanie do bazy supliera oraz kilku produktów do bazy
 
-           // Supplier lenovo = new Supplier { Name = "Lenovo", Description = "Computers" };
-           // _unitOfWork.Supplier.Add(lenovo);
-           // ProductCategory computer = new ProductCategory { Name = "Computer", Department = "PC", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
-           // _unitOfWork.ProductCategory.Add(computer);
-           // _unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
-           // _unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
-           // _unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
-           // _unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+            // Supplier lenovo = new Supplier { Name = "Lenovo", Description = "Computers" };
+            // _unitOfWork.Supplier.Add(lenovo);
+            // ProductCategory computer = new ProductCategory { Name = "Computer", Department = "PC", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
+            // _unitOfWork.ProductCategory.Add(computer);
+            // _unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+            // _unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
+            // _unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
+            // _unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
 
-           // _unitOfWork.Save();
+            // _unitOfWork.Save();
 
 
-           // //Dodanie kolejnego przedmiotu do bazy
+            // //Dodanie kolejnego przedmiotu do bazy
 
-           //Supplier amazon = new Supplier { Name = "Amazon", Description = "Tablets" };
-           // _unitOfWork.Supplier.Add(amazon);
+            //Supplier amazon = new Supplier { Name = "Amazon", Description = "Tablets" };
+            // _unitOfWork.Supplier.Add(amazon);
 
-           // ProductCategory tablet = new ProductCategory { Name = "Tablet", Department = "Tablet", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
-           // _unitOfWork.ProductCategory.Add(tablet);
+            // ProductCategory tablet = new ProductCategory { Name = "Tablet", Department = "Tablet", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
+            // _unitOfWork.ProductCategory.Add(tablet);
 
-           // _unitOfWork.Product.Add(new Product { Name = "Amazon Fire", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 10, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = tablet, Supplier = amazon });
+            // _unitOfWork.Product.Add(new Product { Name = "Amazon Fire", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 10, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = tablet, Supplier = amazon });
 
-           // _unitOfWork.Save();
+            // _unitOfWork.Save();
 
-            var user = UserService.GetUserByName("Janusz");
+            //var user = UserService.GetUserByName("Janusz");
+            var user = _unitOfWork.User.GetLast();
+
             if (orderedProductId != -1)
             {
+                if (user.Cart == null)
+                {
+                    user.Cart = new Cart();
+                }
                 var allProducts = GetFilteredProducts(0, 0);
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
                 if (user.Cart.Details.Any(p=>p.Product.Id == orderedProductId))
@@ -128,22 +134,29 @@ namespace Codecool.CodecoolShop.Controllers
                 AllProductCategories = _unitOfWork.ProductCategory.GetAll(),
                 AllSuppliers = _unitOfWork.Supplier.GetAll()
             };
+            _unitOfWork.User.Update(user);
+            _unitOfWork.Save();
             return View(_productsAndFilters);
         }
 
         public IActionResult OrderDetails()
         {
             var newestOrder = OrderService.GetNewestOrder();
+            _unitOfWork.Order.Add(newestOrder);
+            _unitOfWork.Save();
+            // order z bazy 
+            var newOrder = _unitOfWork.Order.GetWithDetailsNewest();
+            
             //var newestOrder = _unitOfWork.Order.Get(0);
             var allProducts = GetFilteredProducts(0, 0);
-            foreach (CartDetail detail in newestOrder.User.Cart.Details)
+            foreach (CartDetail detail in newOrder.User.Cart.Details)
             {
                 //allProducts.First(e => e.Id == detail.Product.Id).Quantity -= product.Quantity;
                 allProducts.First(e => e.Id == detail.Product.Id).MaxInStock -= detail.Quantity;
             }
 
-            var userData = newestOrder.User;
-            var userAddress = newestOrder.User;
+            var userData = newOrder.User;
+            var userAddress = newOrder.User;
             OrderForDelete orderCopy = new OrderForDelete()
             {
                 Name = userData.Name, UserId = userData.Id,
@@ -152,14 +165,14 @@ namespace Codecool.CodecoolShop.Controllers
                 PhoneNumber = userAddress.PhoneNumber, BillingAddress = userAddress.BillingAddress, BillingCity = userAddress.BillingCity,
                 BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
                 ShippingAddress = userAddress.ShippingAddress, ShippingCity = userAddress.ShippingCity,
-                ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newestOrder.Id,
-                OrderDateTime = newestOrder.OrderDateTime, IsPayed = newestOrder.IsPayedNow
+                ShippingCountry = userAddress.ShippingCountry, ShippingZip = userAddress.ShippingZip, OrderId = newOrder.Id,
+                OrderDateTime = newOrder.OrderDateTime, IsPayed = newOrder.IsPayedNow
             };
             var mail = new MailSenderService();
             
             mail.MailSender(orderCopy);
-            newestOrder.User.Cart = new Cart();
-            newestOrder.User.ShoppingCartValue = 0;
+            newOrder.User.Cart = new Cart();
+            newOrder.User.ShoppingCartValue = 0;
             return View(orderCopy);
         }
 
@@ -170,7 +183,7 @@ namespace Codecool.CodecoolShop.Controllers
         [HttpGet]
         public IActionResult ShoppingCart()
         {
-            var user = UserService.GetUser(1);
+            var user = _unitOfWork.User.GetLast();
             return View(user);
         }
 
@@ -181,7 +194,8 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult PlusQuantity(int id)
         {
-            var user = UserService.GetUserByName("Janusz");
+            var user = _unitOfWork.User.GetLast();
+            //UserService.GetUserByName("Janusz");
             var product = user.Cart.Details.FirstOrDefault(e => e.Product.Id == id);
             if (product.Quantity == product.Product.MaxInStock)
             {
@@ -192,13 +206,14 @@ namespace Codecool.CodecoolShop.Controllers
                 product.Quantity++;
                 user.ShoppingCartValue += product.Product.DefaultPrice;
             }
+            _unitOfWork.User.Update(user);
                 
             return RedirectToAction(nameof(ShoppingCart));
         }
 
         public IActionResult MinusQuantity(int id)
         {
-            var user = UserService.GetUserByName("Janusz");
+            var user = _unitOfWork.User.GetLast();
             var product = user.Cart.Details.FirstOrDefault(e => e.Product.Id == id);
             product.Quantity--;
             user.ShoppingCartValue -= product.Product.DefaultPrice;
@@ -226,7 +241,7 @@ namespace Codecool.CodecoolShop.Controllers
                                                         "BillingCountry, BillingCity, BillingZip, BillingAddress, " +
                                                         "ShippingCountry, ShippingCity, ShippingZip, ShippingAddress", "IsPayedNow")] UserDataToCheck userData)
         {
-            User currentUser = UserService.GetUserByName("Janusz");
+            User currentUser = _unitOfWork.User.GetLast();
             Order newOrder = new Order();
             newOrder.IsPayedNow = userData.IsPayedNow;
             newOrder.OrderDateTime = DateTime.Now;
@@ -282,6 +297,7 @@ namespace Codecool.CodecoolShop.Controllers
                 {
                     return RedirectToAction(nameof(Payment));
                 }
+                // order do bazy
                 return RedirectToAction(nameof(OrderDetails));
             }
             newOrder.IsSuccessFull = false;

@@ -24,9 +24,9 @@ namespace Codecool.CodecoolShop.Repository
             _db.Update(obj);
         }
 
-        public Order GetWithDetails(int id)
+        public Order GetWithDetailsNewest()
         {
-            return _db.Orders.Include(u => u.User).FirstOrDefault(x => x.Id == id);
+            return _db.Orders.Include(u => u.User).LastOrDefault();
             // .theninclude()
         }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Codecool.CodecoolShop.Migrations
 {
     [DbContext(typeof(CodeCoolDBContext))]
-    [Migration("20220707074934_MigrationNew")]
-    partial class MigrationNew
+    [Migration("20220707083948_migrationFinal")]
+    partial class migrationFinal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

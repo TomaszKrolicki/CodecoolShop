@@ -70,29 +70,29 @@ namespace Codecool.CodecoolShop.Controllers
         {
             //Dodawanie do bazy supliera oraz kilku produktów do bazy
 
-            //Supplier lenovo = new Supplier { Name = "Lenovo", Description = "Computers" };
-            //_unitOfWork.Supplier.Add(lenovo);
-            //ProductCategory computer = new ProductCategory { Name = "Computer", Department = "PC", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
-            //_unitOfWork.ProductCategory.Add(computer);
-            //_unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
-            //_unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
-            //_unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
-            //_unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+           // Supplier lenovo = new Supplier { Name = "Lenovo", Description = "Computers" };
+           // _unitOfWork.Supplier.Add(lenovo);
+           // ProductCategory computer = new ProductCategory { Name = "Computer", Department = "PC", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
+           // _unitOfWork.ProductCategory.Add(computer);
+           // _unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+           // _unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
+           // _unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
+           // _unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
 
-            //_unitOfWork.Save();
+           // _unitOfWork.Save();
 
 
-            // Dodanie kolejnego przedmiotu do bazy 
+           // //Dodanie kolejnego przedmiotu do bazy
 
-            //Supplier lenovo = new Supplier { Name = "Amazon", Description = "Tablets" };
-            //_unitOfWork.Supplier.Add(lenovo);
+           //Supplier amazon = new Supplier { Name = "Amazon", Description = "Tablets" };
+           // _unitOfWork.Supplier.Add(amazon);
 
-            //ProductCategory computer = new ProductCategory { Name = "Tablet", Department = "Tablet", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
-            //_unitOfWork.ProductCategory.Add(computer);
+           // ProductCategory tablet = new ProductCategory { Name = "Tablet", Department = "Tablet", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
+           // _unitOfWork.ProductCategory.Add(tablet);
 
-            //_unitOfWork.Product.Add(new Product { Name = "Amazon Fire", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 10, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
+           // _unitOfWork.Product.Add(new Product { Name = "Amazon Fire", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 10, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = tablet, Supplier = amazon });
 
-            //_unitOfWork.Save();
+           // _unitOfWork.Save();
 
             var user = UserService.GetUserByName("Janusz");
             if (orderedProductId != -1)

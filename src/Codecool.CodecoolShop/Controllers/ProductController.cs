@@ -68,45 +68,57 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult Index(int categoryId, int supplierId, int orderedProductId = -1)
         {
+            //Dodawanie do bazy supliera oraz kilku produktów do bazy
+
             //Supplier lenovo = new Supplier { Name = "Lenovo", Description = "Computers" };
             //_unitOfWork.Supplier.Add(lenovo);
             //ProductCategory computer = new ProductCategory { Name = "Computer", Department = "PC", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
             //_unitOfWork.ProductCategory.Add(computer);
-            //_unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", Quantity = 1, MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
-            //_unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", Quantity = 5, MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
-            //_unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", Quantity = 0, MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
-            //_unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", Quantity = 7, MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "Lenovo IdeaPad Miix 700", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 1, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "Amazon Fire HD 8", DefaultPrice = 89.0m, Currency = "USD", MaxInStock = 5, Description = "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "PC1", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 0, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
+            //_unitOfWork.Product.Add(new Product { Name = "PC2", DefaultPrice = 479.0m, Currency = "USD", MaxInStock = 7, Description = "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", ProductCategory = computer, Supplier = lenovo });
 
             //_unitOfWork.Save();
-            //int cos = 1;
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    cos = 3;
-            //}
+
+
+            // Dodanie kolejnego przedmiotu do bazy 
+
+            //Supplier lenovo = new Supplier { Name = "Amazon", Description = "Tablets" };
+            //_unitOfWork.Supplier.Add(lenovo);
+
+            //ProductCategory computer = new ProductCategory { Name = "Tablet", Department = "Tablet", Description = "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display." };
+            //_unitOfWork.ProductCategory.Add(computer);
+
+            //_unitOfWork.Product.Add(new Product { Name = "Amazon Fire", DefaultPrice = 49.9m, Currency = "USD", MaxInStock = 10, Description = "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", ProductCategory = computer, Supplier = lenovo });
+
+            //_unitOfWork.Save();
+
             var user = UserService.GetUserByName("Janusz");
             if (orderedProductId != -1)
             {
                 var allProducts = GetFilteredProducts(0, 0);
                 var orderedProduct = allProducts.First(e => e.Id == orderedProductId);
-                if (user.ShoppingCart.Any(p=>p.Id == orderedProductId))
+                if (user.Cart.Details.Any(p=>p.Product.Id == orderedProductId))
                 {
-                    var product = user.ShoppingCart.First(e => e.Id == orderedProductId);
-                    product.Quantity++;
+                    var detail = user.Cart.Details.First(e => e.Product.Id == orderedProductId);
+                    detail.Quantity++;
                     user.ShoppingCartValue += orderedProduct.DefaultPrice;
-                    if (product.Quantity > product.MaxInStock)
+                    if (detail.Quantity > detail.Product.MaxInStock)
                     {
-                        var numberToDelete = product.Quantity - product.MaxInStock;
+                        var numberToDelete = detail.Quantity - detail.Product.MaxInStock;
                         user.ShoppingCartValue -= numberToDelete * orderedProduct.DefaultPrice;
-                        product.Quantity = product.MaxInStock;
+                        detail.Quantity = detail.Product.MaxInStock;
                     }
                 }
                 else
                 {
-                    user.ShoppingCart.Add(new Product { Id = orderedProduct.Id, Name = orderedProduct.Name, DefaultPrice = orderedProduct.DefaultPrice,
-                        Currency = orderedProduct.Currency, Quantity = 1, MaxInStock = orderedProduct.MaxInStock, 
-                        Description = orderedProduct.Description, ProductCategory = orderedProduct.ProductCategory, 
-                        Supplier = orderedProduct.Supplier });
+                    var newDetail = new CartDetail();
+                    newDetail.Product = orderedProduct;
+                    newDetail.Quantity = 1;
+                    user.Cart.Details.Add(newDetail);
                     user.ShoppingCartValue += orderedProduct.DefaultPrice;
+
                 }
 
             }
@@ -121,13 +133,13 @@ namespace Codecool.CodecoolShop.Controllers
 
         public IActionResult OrderDetails()
         {
-            //var newestOrder = OrderService.GetNewestOrder();
-            var newestOrder = _unitOfWork.Order.Get(0);
+            var newestOrder = OrderService.GetNewestOrder();
+            //var newestOrder = _unitOfWork.Order.Get(0);
             var allProducts = GetFilteredProducts(0, 0);
-            foreach (Product product in newestOrder.User.ShoppingCart)
+            foreach (CartDetail detail in newestOrder.User.Cart.Details)
             {
-                allProducts.First(e => e.Id == product.Id).Quantity -= product.Quantity;
-                allProducts.First(e => e.Id == product.Id).MaxInStock -= product.Quantity;
+                //allProducts.First(e => e.Id == detail.Product.Id).Quantity -= product.Quantity;
+                allProducts.First(e => e.Id == detail.Product.Id).MaxInStock -= detail.Quantity;
             }
 
             var userData = newestOrder.User;
@@ -135,7 +147,7 @@ namespace Codecool.CodecoolShop.Controllers
             OrderForDelete orderCopy = new OrderForDelete()
             {
                 Name = userData.Name, UserId = userData.Id,
-                ShoppingCart = userData.ShoppingCart, ShoppingCartValue = userData.ShoppingCartValue,
+                CartDetails = userData.Cart.Details, ShoppingCartValue = userData.ShoppingCartValue,
                 FirstName = userAddress.FirstName, LastName = userAddress.LastName, Email = userAddress.Email,
                 PhoneNumber = userAddress.PhoneNumber, BillingAddress = userAddress.BillingAddress, BillingCity = userAddress.BillingCity,
                 BillingCountry = userAddress.BillingCountry, BillingZip = userAddress.BillingZip,
@@ -146,7 +158,7 @@ namespace Codecool.CodecoolShop.Controllers
             var mail = new MailSenderService();
             
             mail.MailSender(orderCopy);
-            newestOrder.User.ShoppingCart = new List<Product>();
+            newestOrder.User.Cart = new Cart();
             newestOrder.User.ShoppingCartValue = 0;
             return View(orderCopy);
         }
@@ -170,15 +182,15 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult PlusQuantity(int id)
         {
             var user = UserService.GetUserByName("Janusz");
-            var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
-            if (product.Quantity == product.MaxInStock)
+            var product = user.Cart.Details.FirstOrDefault(e => e.Product.Id == id);
+            if (product.Quantity == product.Product.MaxInStock)
             {
-                product.Quantity = product.MaxInStock;
+                product.Quantity = product.Product.MaxInStock;
             }
             else
             {
                 product.Quantity++;
-                user.ShoppingCartValue += product.DefaultPrice;
+                user.ShoppingCartValue += product.Product.DefaultPrice;
             }
                 
             return RedirectToAction(nameof(ShoppingCart));
@@ -187,12 +199,12 @@ namespace Codecool.CodecoolShop.Controllers
         public IActionResult MinusQuantity(int id)
         {
             var user = UserService.GetUserByName("Janusz");
-            var product = user.ShoppingCart.FirstOrDefault(e => e.Id == id);
+            var product = user.Cart.Details.FirstOrDefault(e => e.Product.Id == id);
             product.Quantity--;
-            user.ShoppingCartValue -= product.DefaultPrice;
+            user.ShoppingCartValue -= product.Product.DefaultPrice;
             if (product.Quantity == 0)
             {
-                user.ShoppingCart.Remove(product);
+                user.Cart.Details.Remove(product);
             }
             return RedirectToAction(nameof(ShoppingCart));
         }
@@ -239,7 +251,7 @@ namespace Codecool.CodecoolShop.Controllers
             {
                 Name = userDat.Name,
                 UserId = userDat.Id,
-                ShoppingCart = userDat.ShoppingCart,
+                CartDetails = userDat.Cart.Details,
                 ShoppingCartValue = userDat.ShoppingCartValue,
                 FirstName = userData.FirstName,
                 LastName = userData.LastName,
@@ -263,9 +275,9 @@ namespace Codecool.CodecoolShop.Controllers
                 newOrder.IsSuccessFull = true;
                 orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
                 
-                string jsonOrderSuccessFull = orderCopy.SaveToJson();
+                //string jsonOrderSuccessFull = orderCopy.SaveToJson();
                 string filename = $"{orderCopy.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
-                System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);
+                //System.IO.File.WriteAllText($@".\AdminLog\{filename}.json", jsonOrderSuccessFull);
                 if (newOrder.IsPayedNow)
                 {
                     return RedirectToAction(nameof(Payment));
@@ -274,9 +286,9 @@ namespace Codecool.CodecoolShop.Controllers
             }
             newOrder.IsSuccessFull = false;
             orderCopy.IsSuccessFull = newOrder.IsSuccessFull;
-            string jsonOrderFailed = orderCopy.SaveToJson();
+            //string jsonOrderFailed = orderCopy.SaveToJson();
             string filename2 = $"{orderCopy.OrderId}-{newOrder.OrderDateTime.Day}-{newOrder.OrderDateTime.Month}-{newOrder.OrderDateTime.Hour}-{newOrder.OrderDateTime.Minute}";
-            System.IO.File.WriteAllText($@".\AdminLog\{filename2}.json", jsonOrderFailed);
+            //System.IO.File.WriteAllText($@".\AdminLog\{filename2}.json", jsonOrderFailed);
             return View(userData);
         }
 

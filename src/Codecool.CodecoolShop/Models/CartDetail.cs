@@ -16,7 +16,9 @@ namespace Codecool.CodecoolShop.Models
         public int CartId { get; set; }
         [ForeignKey(nameof(CartId))]
         public Cart Cart { get; set; }
-        //[Required]
-        //public int Quantity { get; set; }
+
+        [Required]
+        public int Quantity { get; set; }
+        
     }
 }
